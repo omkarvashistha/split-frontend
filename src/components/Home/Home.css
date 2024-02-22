@@ -1,0 +1,95 @@
+.home_main{
+    padding: 2%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+    
+}
+
+.add_home{
+    border : 4px dotted green;
+    width : 200px;
+    height :100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+
+
+
+.add_home:hover{
+    transform: scale(0.9);
+}
+
+/* Overlay styles */
+
+.addGroup_top{
+    text-align: center;
+}
+
+.addGroup_form{
+    margin-top : 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.addGroup_form input{
+    padding: 12px;
+    width : 250px;
+    border-radius: 10px;
+    font-size: 1rem;
+}
+
+.addGroup_btn_container{
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.addGroup_btn_container button{
+    width: 150px;
+    padding: 11px;
+    border-radius: 20px;
+    font-weight: bold;
+    background-color: rgba(172, 255, 47, 0.718);
+    cursor: pointer;
+}
+
+/**/
+.error_msg{
+    color : red;
+    margin-top: 15px;
+}
+
+/*HOME CHILD CSS*/
+.home_child_main{
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    min-height: 200px;
+    min-width : 500px;
+    box-shadow: 0 0 2px rgb(11, 11, 11);
+    transition: 1s;
+    cursor: pointer;
+    z-index : 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.home_child_main:hover{
+    transform: scale(0.96);
+}
+
+.home_child_gname{
+    font-weight: 500;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
