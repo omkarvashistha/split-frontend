@@ -4,17 +4,17 @@ import Login from './components/Login/login';
 import Home from './components/Home/Home';
 import Signup from './components/Signup/Signup';
 import Navbar from './components/Navbar/Navbar';
+import Main from './components/MainComponent/Main';
 
 const App = () => {
   return(
     <>
       
       <BrowserRouter>
-        <Navbar/>
+        {/* <Navbar/> */}
         <Routes>
-          <Route path='/' element = {<Home/>}/>
+          <Route path='/' element = {<Main/>}/>
           <Route path='/login' element = {<Login/>}/>
-          <Route path='/home' element = {<Home/>}/>
           <Route path='/signup' element = {<Signup/>}/>
         </Routes>
       </BrowserRouter>

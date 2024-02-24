@@ -1,10 +1,42 @@
 .home_main{
-    padding: 2%;
+    padding-top: 1%;
+    padding-left: 1%;
     display: flex;
+    flex-direction: column;
     justify-content: space-evenly;
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
-    
+}
+
+.home_header{
+    display: flex;
+    align-items: center;
+    width : 100%;
+    justify-content: space-between;
+    padding: 0 5px;
+    height : 60px;
+}
+
+.home_header h1{
+    font-size: 1.8rem;
+    font-family: 'Poppins';
+    font-weight: 500;
+}
+
+.home_header_addGroup{
+    width : 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+.home_header_addGroup:hover{
+    background-color: #4B49AC;
+    color:white
 }
 
 .add_home{
@@ -69,26 +101,45 @@
 }
 
 /*HOME CHILD CSS*/
+
+.home_group_section{
+    width : 100%;
+    min-height : 270px;
+    display: flex;
+    align-items: flex-start;
+}
+
+.home_group_slider_main{
+    padding-top : 10px;
+    overflow-x: hidden;
+}
+
+.home_group_slide{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height : 250px;
+}
+
 .home_child_main{
-    padding: 10px 20px;
+    width : 300px;
+    height : 200px;
+    margin-bottom: 10px;
     border-radius: 20px;
-    margin-bottom: 20px;
-    min-height: 200px;
-    min-width : 500px;
-    box-shadow: 0 0 2px rgb(11, 11, 11);
-    transition: 1s;
-    cursor: pointer;
-    z-index : 0;
     display: flex;
     flex-direction: column;
+    padding: 10px;
+    cursor: pointer;
+    font-family: 'Poppins';
+    background-color: #98bdff;
+    color: white;
 }
 
-.home_child_main:hover{
+/* .home_child_main:hover{
     transform: scale(0.96);
-}
+} */
 
 .home_child_gname{
-    font-weight: 500;
     font-size: 2rem;
     margin-bottom: 10px;
 }
