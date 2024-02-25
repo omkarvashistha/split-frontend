@@ -110,12 +110,11 @@ const Home = () =>{
                         aria-label="user groups"
                         className="home_group_slider_main"
                         options={{
-                            perPage : 3,
-                            type : 'loop',
+                            type : 'slide',
                             drag : 'free',
                             width : '100%',
                             autoplay : 'pause',
-                            padding : '20px',
+                            fixedWidth : "true",
                         }}
                         tag="section"
                         hasTrack={true}
@@ -137,11 +136,53 @@ const Home = () =>{
                 
             </div>
 
-            {/* <div className="add_home" onClick={toggleOverlay}>
-                <div >
-                    Add Group
+            <div className="home_graph_section_container">
+                <div className="home_graph_section ">
+                    <h1>Your monthly spending</h1>
+                    <img src="/barGraph.png"/>
                 </div>
-            </div> */}
+                <div className="home_friends_section">
+                    <h1>Friends</h1>
+                    <div className="home_friend_list">
+                        <div className="test-main">
+                            <div className="test-main-img">
+                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
+                            </div>
+                            <div className="test-main-info">
+                                <h2>Person1</h2>
+                                <h3>Email</h3>
+                            </div>
+                        </div>
+                        <div className="test-main">
+                            <div className="test-main-img">
+                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
+                            </div>
+                            <div className="test-main-info">
+                                <h2>Person 2</h2>
+                                <h3>Email</h3>
+                            </div>
+                        </div>
+                        <div className="test-main">
+                            <div className="test-main-img">
+                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
+                            </div>
+                            <div className="test-main-info">
+                                <h2>Person 3</h2>
+                                <h3>Email</h3>
+                            </div>
+                        </div>
+                        <div className="test-main">
+                            <div className="test-main-img">
+                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
+                            </div>
+                            <div className="test-main-info">
+                                <h2>Person 4</h2>
+                                <h3>Email</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <Overlay isOpen={isOpen} onClose={toggleOverlay}>
                 <div className="addGroup_top">
                     <h1>Add Group</h1>

@@ -9,7 +9,7 @@ import './Home.css';
     return(
         <>
             <div className="home_child_main">
-                <span className="home_child_gname">{groupData.GId}</span>
+                <span className="home_child_gname">{groupData.GName}</span>
                 <span className="home_child_owner">{groupData.GroupOwner}</span>
                 {groupData.transactions ? 
                     <div>Your details of cost</div>

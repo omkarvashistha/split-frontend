@@ -28,7 +28,7 @@ const Main = () => {
                     <div className="main-app-logo" style={{marginLeft:"40px"}}>
                         <img src={logo} alt="split logo" width={"100px"} height={"100px"}/>
                     </div>
-                    <div style={{width : "90%",height:"0.7px",backgroundColor:"black",marginTop:"10px"}}/>
+                    
                     <ul className="main-navbar-options">
                         <li onClick={()=>{setComponent("home")}}>
                            <span>
