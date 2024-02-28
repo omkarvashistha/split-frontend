@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAuthentication } from "../../Redux/actions/actions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { SERVER_ADDRESS } from "../Constants/constants";
+import { SERVER_ADDRESS, TEST_SERVER } from "../Constants/constants";
 
 const Login = () =>{
 
@@ -27,8 +27,9 @@ const Login = () =>{
                 email : email,
                 password : password
             }
-
-            await axios.post(`${SERVER_ADDRESS}/login`,userData).then((res)=>{
+            const url = `${TEST_SERVER}/login`;
+            console.log('This is new url',url);
+            await axios.post(url,userData).then((res)=>{
                 const statusCode = res.data.code;
 
                 if(statusCode === 100){
@@ -36,7 +37,7 @@ const Login = () =>{
                     localStorage.setItem('isAuth',isAuth);
                     localStorage.setItem('userEmail',email);
                     if(isAuth) {
-                        navigate("/home");
+                        navigate("/main");
                     }
                 }
                 else {
@@ -49,13 +50,8 @@ const Login = () =>{
     }
 
     useEffect(() => {
-        if (isAuth) {
-            console.log('isAuth value from login page ->',isAuth);
-           // navigate('/home');
-        } else {
-            console.log("failed here");
-        }
-    }, [isAuth]);
+        
+    }, []);
 
     return(
         <>
@@ -89,12 +85,15 @@ const Login = () =>{
                     <span>
                         <a href="#">Forgot password.?</a>
                     </span>
-                    <button className="form_btn" type="submit">Login</button>
+                    <button className="form_btn" type="submit" >Login</button>
                 </form>
             </div>
 
         </>
     )
 }
+
+
+
 
 export default Login;

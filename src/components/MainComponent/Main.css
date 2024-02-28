@@ -10,7 +10,7 @@
 
 
 .main-navbar{
-    width : 15%;
+    width : 20%;
     margin-right:10px;
     height: 650px;
     display: flex;
@@ -70,13 +70,14 @@
 }
 
 .main-navbar-user-info{
-    width : 100%;
+    width : 90%;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     align-items: center;
     flex-basis: 40%;
     text-align: center;
+    margin-left:5px
 }
 
 .main-navbar-user-detail{
@@ -95,6 +96,12 @@
     margin: 0;
 }
 
+@media (max-width : 1050px) {
+    .main-navbar-user-detail h1{
+        font-size : 0.7rem;
+    }
+}
+
 .main-navbar-user-icon{
     width : 60px;
     height : 60px;
@@ -103,9 +110,10 @@
 }
 
 .main-selection{
-    width : 81%;
+    width : 75%;
     padding : 10px;
     background-color: #95aff139;
-    display: block;
+    border-radius: 20px;
+
 }
 

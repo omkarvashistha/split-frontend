@@ -6,26 +6,33 @@ import axios from "axios";
 import { SERVER_ADDRESS, TEST_SERVER } from "../Constants/constants";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import '@splidejs/react-splide/css/sea-green';
+import { useNavigate } from "react-router-dom";
 
 const Home = () =>{
 
     const [groupsData,setGroupsData] = useState([]);
     const email = localStorage.getItem('userEmail');
     const isAuth = useSelector((state) => state.isAuthenticated.isAuth);
+    const [authenticated,setAuth] = useState(false);
     const [isOpen,setIsOpen] = useState(false);
     const [groupName,setGroupName] = useState("");
     const [errorMsg,setErrorMsg] = useState("");
     const HomeChild = lazy(() => import('./HomeChild'));
+    const navigate = useNavigate();
     
 
     useEffect(()=>{
-        localStorage.setItem('isAuth',false);
+        console.log('auth redux',typeof(isAuth));
+        if(isAuth) {
+            setAuth(true);
+        }
         getGroups();
         
     },[]);
 
     const getGroups = async() =>{
         try {
+            console.log('auth',authenticated);
             await axios.get(`${SERVER_ADDRESS}/${email}/getGroups`).then((res)=>{
                 
                 if(res.data.code === 100) {
@@ -93,19 +100,41 @@ const Home = () =>{
         )
     }
 
+    const handleLogin = (e) => {
+        e.preventDefault();
+        navigate('/login');
+    }
+
+    const notLoginContainer = () => {
+        return(
+            <>
+                <div className="not_login_container">
+                    <p>You are not logged in</p>
+                    <button onClick={handleLogin}>Login</button>
+                </div>
+            </>
+        );
+    }
+
     return(
         <div className="home_main">
             <div className="home_header">
                 <h1>Your Groups</h1>
+                {authenticated && 
                 <div className="home_header_addGroup" >
                     <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 18 18">
                         <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                         <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
                     </svg>
                 </div>
+                }
             </div>
 
+            
             <div className="home_group_section">
+                {!authenticated ? 
+                    <>{notLoginContainer()}</>
+                    :
                     <Splide 
                         aria-label="user groups"
                         className="home_group_slider_main"
@@ -133,7 +162,7 @@ const Home = () =>{
                             )
                         })}
                     </Splide>
-                
+                }
             </div>
 
             <div className="home_graph_section_container">
@@ -143,6 +172,9 @@ const Home = () =>{
                 </div>
                 <div className="home_friends_section">
                     <h1>Friends</h1>
+                    {!authenticated
+                    ?
+                    <>{notLoginContainer()}</>:
                     <div className="home_friend_list">
                         <div className="test-main">
                             <div className="test-main-img">
@@ -180,7 +212,9 @@ const Home = () =>{
                                 <h3>Email</h3>
                             </div>
                         </div>
-                    </div>
+                    </div>  
+                    }
+                    
                 </div>
             </div>
             <Overlay isOpen={isOpen} onClose={toggleOverlay}>

@@ -4,7 +4,7 @@ import './Home.css';
  const HomeChild  = ({groupData}) => {
     useEffect(()=>{
         // Here I would have to get the data for group owner and members
-        console.log(groupData.GId);
+        //console.log(groupData.GId);
     },[])
     return(
         <>

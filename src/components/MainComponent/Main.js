@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import Home from "../Home/Home";
 import './Main.css';
 import logo from './logo-image.png';
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Main = () => {
     const [component,setComponent] = useState("home");
+    const isAuth = useSelector((state) => state.isAuthenticated.isAuth);
+    const navigate = useNavigate();
+    const [authenticated,setAuth] = useState(false);
     const renderComponent = () => {
         switch(component) {
             case 'home' :
@@ -19,7 +24,8 @@ const Main = () => {
     }
 
     useEffect(()=>{
-    },[])
+        if(isAuth) {setAuth(true)};
+    },[isAuth])
 
     return(
         <>
@@ -61,14 +67,41 @@ const Main = () => {
                                 </svg>
                             </span>Account
                         </li>
+                        {authenticated ?
+                        <li onClick={(e)=>{e.preventDefault(); localStorage.clear(); navigate('/login')}}>    
+                        <span>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 -2 16 16">
+                                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                            </svg>
+                        </span>Logout
+                        </li>
+                        :
+                        <li onClick={(e)=>{e.preventDefault(); localStorage.clear(); navigate('/login')}}>    
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+                                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                </svg>
+                            </span>Login
+                        </li>
+                        }
+                        
                     </ul>
+                     
                     <div className="main-navbar-user-info">
-                        <div className="main-navbar-user-icon"></div>
-                        <div className="main-navbar-user-detail">
-                            <h1>Omkar vashistha</h1>
-                            <h3>omkarvashistha90@gmail.com</h3>
-                        </div>
+                        {authenticated &&
+                        <>
+                            <div className="main-navbar-user-icon"></div>
+                            <div className="main-navbar-user-detail">
+                                <h1>Omkar vashistha</h1>
+                                <h3>omkarvashistha90@gmail.com</h3>
+                            </div>
+                        </>
+                        
+                        }
                     </div>
+                   
                 </nav>
                 <div className="main-selection ">
                     {/**TODO conditional rendering for selection*/}

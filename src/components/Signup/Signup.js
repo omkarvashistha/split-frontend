@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setAuthentication } from "../../Redux/actions/actions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { SERVER_ADDRESS } from "../Constants/constants";
 
 /**
  * 
@@ -38,7 +39,7 @@ const Signup = () => {
                 email : email,
                 password : password
             }
-            await axios.post('http://localhost:5001/signup',userData).then((res)=>{
+            await axios.post(`${SERVER_ADDRESS}/signup`,userData).then((res)=>{
                 const statusCode = res.data.code;
                 
                 if(statusCode === 102) {
@@ -50,7 +51,7 @@ const Signup = () => {
                     localStorage.setItem('isAuth',isAuth);
                     localStorage.setItem('userEmail',email);
                     if(isAuth) {
-                        navigate("/home");
+                        navigate("/main");
                     }
                 }
 
@@ -62,7 +63,7 @@ const Signup = () => {
 
     useEffect(() => {
         if (isAuth === true) {
-            navigate("/home");
+            navigate("/main");
         } else {
             console.log("failed");
         }
