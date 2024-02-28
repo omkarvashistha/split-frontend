@@ -27,7 +27,7 @@ const Login = () =>{
                 email : email,
                 password : password
             }
-            const url = `${TEST_SERVER}/login`;
+            const url = `${SERVER_ADDRESS}/login`;
             console.log('This is new url',url);
             await axios.post(url,userData).then((res)=>{
                 const statusCode = res.data.code;
