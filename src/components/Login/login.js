@@ -5,6 +5,7 @@ import { setAuthentication } from "../../Redux/actions/actions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { SERVER_ADDRESS, TEST_SERVER } from "../Constants/constants";
+import Spinner from "../Common/Spinner/Spinner";
 
 const Login = () =>{
 
@@ -15,6 +16,8 @@ const Login = () =>{
     const isAuth = useSelector((state) => state.isAuthenticated.isAuth); 
     const navigate = useNavigate();
 
+    const [loading,setLoading] = useState(false);
+
     const loginUser = async (e) => {
         e.preventDefault();
 
@@ -23,6 +26,7 @@ const Login = () =>{
             console.log(error);
         } else {
             setError("");
+            setLoading(true);
             const userData = {
                 email : email,
                 password : password
@@ -46,6 +50,7 @@ const Login = () =>{
             }).catch((err)=>{
                 console.log("Error from login page",err);
             })
+            setLoading(false);
         }
     }
 
@@ -85,7 +90,7 @@ const Login = () =>{
                     <span>
                         <a href="#">Forgot password.?</a>
                     </span>
-                    <button className="form_btn" type="submit" >Login</button>
+                    <button className="form_btn" type="submit" >{loading ? <Spinner size="small" color="white" /> : "Login"}</button>
                 </form>
             </div>
 

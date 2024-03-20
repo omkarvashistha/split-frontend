@@ -7,6 +7,7 @@ import { SERVER_ADDRESS, TEST_SERVER } from "../Constants/constants";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import '@splidejs/react-splide/css/sea-green';
 import { useNavigate } from "react-router-dom";
+import Spinner from "../Common/Spinner/Spinner";
 
 const Home = () =>{
 
@@ -19,6 +20,8 @@ const Home = () =>{
     const [errorMsg,setErrorMsg] = useState("");
     const HomeChild = lazy(() => import('./HomeChild'));
     const navigate = useNavigate();
+
+    const [loading,setLoading] = useState(false);
     
 
     useEffect(()=>{
@@ -32,6 +35,7 @@ const Home = () =>{
 
     const getGroups = async() =>{
         try {
+            setLoading(true);
             console.log('auth',authenticated);
             await axios.get(`${SERVER_ADDRESS}/${email}/getGroups`).then((res)=>{
                 
@@ -47,7 +51,7 @@ const Home = () =>{
                 console.log(error);
                 alert("Error in getting group call check console")
             });
-            
+            setLoading(false);
         } catch (error) {
             console.log(error);
             alert("Some error caught in getting groups check console");
@@ -132,7 +136,11 @@ const Home = () =>{
 
             
             <div className="home_group_section">
-                {!authenticated ? 
+                
+                {loading ?
+                <Spinner size="large"/>
+                :
+                !authenticated ? 
                     <>{notLoginContainer()}</>
                     :
                     <Splide 
