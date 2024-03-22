@@ -23,7 +23,18 @@
     font-weight: 500;
 }
 
-.home_header_addGroup{
+.home_header_buttonGroup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right : 20px
+}
+
+.tooltip {
+    position: relative;
+}
+
+.button_with_tooltip{
     width : 45px;
     height: 45px;
     border-radius: 50%;
@@ -31,10 +42,45 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    margin-right: 1rem;
 }
 
-.home_header_addGroup:hover{
+.tooltip .tooltiptext {
+    visibility: hidden;
+    position: absolute;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+.tooltip .tooltip-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.tooltip-bottom {
+    top: 135%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.button_with_tooltip:hover{
     background-color: #4B49AC;
     color:white
 }
@@ -142,6 +188,8 @@
 
 .addGroup_top{
     text-align: center;
+    font-family: 'Poppins';
+    font-size: 1rem;
 }
 
 .addGroup_form{
@@ -172,6 +220,45 @@
     font-weight: bold;
     background-color: rgba(172, 255, 47, 0.718);
     cursor: pointer;
+}
+
+/*--------------------------Expense Overlay styles------------------*/
+
+#dropdown{
+    background-color: red;
+    padding: 5px;
+    width : 100%;
+}
+
+.select_member_btn {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 1%;
+    background-color: transparent;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.select_member_btn svg{
+    margin : 0px 5px;
+}
+
+.member-list-container{
+    border : 2px solid black;
+    width : 40%;
+    text-align: center;
+    border-radius: 10px;
+    font-family: 'Poppins';
+    font-size: 1.2rem;
+}
+
+.member-list-item{
+    display: flex;
+    justify-content: space-between;
+    margin:3px 5px;
 }
 
 /**/
@@ -241,6 +328,21 @@
 .home_child_owner{
     font-size: 1rem;
     color: rgba(0,0,0,.6);
+}
+
+.home_child_btn_group{
+    display: flex;
+    width : 50%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.home_child_btn{
+    margin-top: 10px;
+    color: rgba(32, 27, 27, 0.736);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .not_login_container{

@@ -8,6 +8,7 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import '@splidejs/react-splide/css/sea-green';
 import { useNavigate } from "react-router-dom";
 import Spinner from "../Common/Spinner/Spinner";
+import DynamicDropdown from "../Common/DynamicDropdown/DynamicDropdown";
 
 const Home = () =>{
 
@@ -16,41 +17,57 @@ const Home = () =>{
     const isAuth = useSelector((state) => state.isAuthenticated.isAuth);
     const [authenticated,setAuth] = useState(false);
     const [isOpen,setIsOpen] = useState(false);
+    const [isOpenExpense,setIsOpenExpense] = useState(false);
     const [groupName,setGroupName] = useState("");
     const [errorMsg,setErrorMsg] = useState("");
     const HomeChild = lazy(() => import('./HomeChild'));
     const navigate = useNavigate();
 
+    const [groupId,setGroupId] = useState('');
+    const [memberlist,setMemberList] = useState([]);
     const [loading,setLoading] = useState(false);
-    
+    const [overlayLoader,setOverlayLoader] = useState(false);
+    const [groupNames,setGroupNames] = useState([]);
 
     useEffect(()=>{
-        console.log('auth redux',typeof(isAuth));
         if(isAuth) {
             setAuth(true);
         }
         getGroups();
-        
+        console.log(groupNames)
     },[]);
+
+    const getGroupMembers = (e) => {
+        e.preventDefault();
+
+        groupsData.forEach((group)=>{
+            console.log("groupID ->", group.GId);
+            console.log("groupId ->", groupId);
+            if(group.GId === groupId){
+                console.log("group Member -> ",group.GroupMembers);
+                setMemberList(group.GroupMembers);
+            }
+        })
+    }
 
     const getGroups = async() =>{
         try {
             setLoading(true);
-            console.log('auth',authenticated);
-            await axios.get(`${SERVER_ADDRESS}/${email}/getGroups`).then((res)=>{
+            const response = await axios.get(`${SERVER_ADDRESS}/${email}/getGroups`);
                 
-                if(res.data.code === 100) {
-                    const groupsData = res.data.groupsData;
-                    //console.log(groupsData);
+                if(response.data.code === 100) {
+                    const groupsData = response.data.groupsData;
                     setGroupsData(groupsData);
-                    console.log(groupsData);
+                    const groupNames = groupsData.map(group => ({
+                        "GName": group.GName,
+                        "GId": group.GId
+                    }));
+                    console.log("groupNames -> ",groupNames);
+                    setGroupNames(groupNames);
                 } else {
                     alert("Some error in getting group call")
+                    setLoading(false);
                 }
-            }).catch((error)=>{
-                console.log(error);
-                alert("Error in getting group call check console")
-            });
             setLoading(false);
         } catch (error) {
             console.log(error);
@@ -59,41 +76,44 @@ const Home = () =>{
     }
 
     const addGroup = async(e) => {
+        setOverlayLoader(true);
         e.preventDefault();
         try {
             if(groupName.length === 0){
                 setErrorMsg("Please enter group name");
             } else {
                 setErrorMsg("");
-                
                 const groupData = {
                     email : email,
-                    gName : groupName
+                    GName : groupName
                 };
                 await axios.post(`${SERVER_ADDRESS}/addGroup`,groupData).then((res)=>{
-                    console.log('add Group api call result ->',res.data.code);
                     if(res.data.code === 100){
-                        console.log(res.data);
-                        //getGroups();
                         toggleOverlay();
                     }
                     
                 }).catch((error)=>{
                     console.log('add Group API Error ->',error);
                 })
-                await getGroups();
+                getGroups();
                 setIsOpen(!isOpen);
             }
         } catch (error) {
             console.log('Error in addGroup ->',error);
         }
+        setOverlayLoader(false);
     }
 
     const toggleOverlay = () => {
-        console.log("Overlay Toggle clicked")
         setErrorMsg("");
         setGroupName("");
         setIsOpen(!isOpen);
+    }
+
+    const toggleExpenseOverlay = () => {
+        setIsOpenExpense(!isOpenExpense);
+        setGroupId('');
+        setMemberList([]);
     }
 
     const fallbackDiv = () => {
@@ -125,11 +145,30 @@ const Home = () =>{
             <div className="home_header">
                 <h1>Your Groups</h1>
                 {authenticated && 
-                <div className="home_header_addGroup" >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 18 18">
-                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                        <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
-                    </svg>
+                <div className="home_header_buttonGroup">
+                    <div className="button_with_tooltip tooltip" >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 18 18">
+                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                            <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
+                        </svg>
+                        <div className="tooltiptext tooltip-bottom">Add Friend</div>
+                    </div>
+
+                    <div className="button_with_tooltip tooltip" onClick={toggleOverlay}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
+                            <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+                            <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+                        </svg>
+                        <div className="tooltiptext tooltip-bottom">Add Group</div>
+                    </div>
+
+                    <div className="button_with_tooltip tooltip"  
+                        onClick={toggleExpenseOverlay}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                        </svg>
+                        <div className="tooltiptext tooltip-bottom">Add Expense</div>
+                    </div>
                 </div>
                 }
             </div>
@@ -143,33 +182,41 @@ const Home = () =>{
                 !authenticated ? 
                     <>{notLoginContainer()}</>
                     :
-                    <Splide 
-                        aria-label="user groups"
-                        className="home_group_slider_main"
-                        options={{
-                            type : 'slide',
-                            drag : 'free',
-                            width : '100%',
-                            autoplay : 'pause',
-                            fixedWidth : "true",
-                        }}
-                        tag="section"
-                        hasTrack={true}
-                    >
-                        {groupsData && groupsData.map((group) => {
-                            return(
-                                group 
-                                && 
-                                <SplideSlide key={group.GId} className="home_group_slide">
-                                    <Suspense fallback={fallbackDiv}>
-                                        <HomeChild key={group.GId} groupData={group}/>
-                                    </Suspense>
+                        groupsData.length === 0 ? 
+                        <div className="not_login_container">
+                            <p>No Groups here. Add Group</p>
+                        </div>
+                        :
+                        <Splide 
+                            aria-label="user groups"
+                            className="home_group_slider_main"
+                            options={{
+                                type : 'slide',
+                                drag : 'free',
+                                width : '100%',
+                                autoplay : 'pause',
+                                fixedWidth : "true",
+                            }}
+                            tag="section"
+                            hasTrack={true}
+                        >
+                            {groupsData && groupsData.map((group) => {
+                                if(group!==null) {
+                                    return(
+                                        group 
+                                        && 
+                                        <SplideSlide key={group.GId} className="home_group_slide">
+                                            <Suspense fallback={fallbackDiv}>
+                                                <HomeChild key={group.GId} groupData={group}/>
+                                            </Suspense>
+                                                
+                                        </SplideSlide> 
                                         
-                                </SplideSlide> 
-                                
-                            )
-                        })}
-                    </Splide>
+                                    )
+                                }
+                            })}
+                        </Splide>
+                    
                 }
             </div>
 
@@ -225,6 +272,7 @@ const Home = () =>{
                     
                 </div>
             </div>
+
             <Overlay isOpen={isOpen} onClose={toggleOverlay}>
                 <div className="addGroup_top">
                     <h1>Add Group</h1>
@@ -238,9 +286,53 @@ const Home = () =>{
                         }}
                     />
                     <span className="addGroup_btn_container"> 
-                        <button type="submit" >Add Group</button>
+                        <button type="submit" >{overlayLoader ? <Spinner size="small"/> : "Add Group"}</button>
                     </span>
                     {errorMsg ? <div className="error_msg">{errorMsg}</div> : null}  
+                </form>
+            </Overlay>
+
+            <Overlay isOpen={isOpenExpense} onClose={toggleExpenseOverlay}>
+                <div className="addGroup_top">
+                    <h1>Add Your Expense</h1>
+                </div>
+                <form className="addGroup_form">
+                    <DynamicDropdown groupNames={groupNames} setGroupId={setGroupId}/>
+                    {groupId!== '' &&
+                        <>
+                            <input 
+                                className=""
+                                placeholder="Enter a description"
+                            />
+                            <input 
+                                className=""
+                                style={{marginTop : "5px"}}
+                                placeholder="Amount"
+                            />
+                            <button className="select_member_btn" onClick={ getGroupMembers}>
+                                Select members involved
+                            </button>
+
+                            {memberlist.length === 0 ? null : 
+                                <div className="member-list-container">
+                                    <p>Members</p>
+                                    <div className="member-list">
+                                        {memberlist.map((member) =>{
+                                            return (
+                                            <div key={member} className="member-list-item">
+                                                <p>500</p>
+                                                <p>{member}</p>
+                                            </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            }
+
+                        </>
+                        
+                    }
+                    
                 </form>
             </Overlay>
         </div>
