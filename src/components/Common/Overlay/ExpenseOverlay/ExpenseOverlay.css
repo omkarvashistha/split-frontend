@@ -1,0 +1,95 @@
+.button {
+    --main-focus: #2d8cf0;
+    --font-color: #dedede;
+    --bg-color-sub: #222;
+    --bg-color: #323232;
+    --main-color: #dedede;
+    position: relative;
+    width: 180px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--main-color);
+    box-shadow: 4px 4px var(--main-color);
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .button, .button__icon, .button__text {
+    transition: all 0.3s;
+  }
+  
+  .button .button__text {
+    transform: translateX(25px);
+    color: var(--font-color);
+    font-weight: 600;
+  }
+   .button .button__icon {
+    position: absolute;
+    transform: translateX(129px);
+    height: 100%;
+    width: 39px;
+    background-color: var(--bg-color-sub);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button .svg {
+    width: 20px;
+    stroke: var(--main-color);
+  }
+  
+  .button:hover {
+    background: var(--bg-color);
+  }
+  
+  .button:hover .button__text {
+    color: transparent;
+  }
+  
+  .button:hover .button__icon {
+    width: 178px;
+    transform: translateX(0);
+  }
+  
+  .button:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px var(--main-color);
+  }
+
+.member-list{
+    display: flex;
+    justify-content: space-evenly;
+    border-top : 1px solid black;
+    border-bottom: 1px solid black;
+    align-items: center;
+}
+
+.member-list-val{
+    border : none;
+    border-bottom: 1px solid black;
+    outline: none;
+    width : 20%;
+    font-size: 1rem;
+}
+
+.add-transaction-btn{
+    padding: 2% 2%;
+    margin : 2% 0;
+    font-family: 'Poppins';
+    cursor: pointer;
+    font-weight: bold;
+    background-color: #4CC713;
+    text-decoration: none;
+    text-align: center;
+    border: none;
+    color: rgba(255, 255, 255, 0.901);
+    display: inline-block;
+}
+
+.add-transaction-btn:hover {
+    background-color: #45a21a;
+}
