@@ -200,7 +200,7 @@
     flex-direction: column;
 }
 
-.addGroup_form input{
+.addGroup_form_input{
     padding: 12px;
     width : 250px;
     border-radius: 10px;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './dynamicDropdown.css';
 import Spinner from '../Spinner/Spinner';
 
-const DynamicDropdown = ({ groupNames , setGroupId }) => {
+const DynamicDropdown = ({ groupNames , setGroupId, loading }) => {
     const [selectedGroupName, setSelectedGroupName] = useState('');
     const [isListVisible, setIsListVisible] = useState(false);
   
@@ -15,7 +15,6 @@ const DynamicDropdown = ({ groupNames , setGroupId }) => {
     };
 
   useEffect(()=>{
-    console.log("groupNames -> ",groupNames);
   },[])
 
   return (
@@ -30,8 +29,9 @@ const DynamicDropdown = ({ groupNames , setGroupId }) => {
       </label>
       {isListVisible && 
         <div className='dropdown-list-container'>
-            {groupNames  ? 
-                groupNames.map(group => {console.log("group -> ",group);return(
+            {!loading  ? 
+                groupNames && groupNames.map(group => {
+                  return(
                     <div
                         key={group.GId}
                         className='dropdown-option'
@@ -41,7 +41,10 @@ const DynamicDropdown = ({ groupNames , setGroupId }) => {
                     </div>
                 )})
                 :
-                <Spinner size='small'/>
+                <div style={{padding : "1%"}}>
+                    <Spinner size='small'/>
+                </div>
+                
             }
         </div>
         }

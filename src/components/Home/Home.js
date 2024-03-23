@@ -8,7 +8,8 @@ import { Splide, SplideSlide } from "@splidejs/react-splide";
 import '@splidejs/react-splide/css/sea-green';
 import { useNavigate } from "react-router-dom";
 import Spinner from "../Common/Spinner/Spinner";
-import DynamicDropdown from "../Common/DynamicDropdown/DynamicDropdown";
+import ExpenseOverlay from "../Common/Overlay/ExpenseOverlay/ExpenseOverlay";
+import  commonApiCalls from "../Common/commonApiCalls";
 
 const Home = () =>{
 
@@ -24,30 +25,47 @@ const Home = () =>{
     const navigate = useNavigate();
 
     const [groupId,setGroupId] = useState('');
-    const [memberlist,setMemberList] = useState([]);
-    const [loading,setLoading] = useState(false);
+    const [showMemberList,setShowMemberList] = useState(false);
+    const [listLoading,setListLoading] = useState(false); // For loading member list
+    const [loading,setLoading] = useState(false); // for loading group list
     const [overlayLoader,setOverlayLoader] = useState(false);
     const [groupNames,setGroupNames] = useState([]);
+    const [memberNames,setMemberNames] = useState([]);
 
     useEffect(()=>{
         if(isAuth) {
             setAuth(true);
         }
         getGroups();
-        console.log(groupNames)
     },[]);
 
-    const getGroupMembers = (e) => {
+    const getGroupMembers = async (e) => {
         e.preventDefault();
-
-        groupsData.forEach((group)=>{
-            console.log("groupID ->", group.GId);
-            console.log("groupId ->", groupId);
-            if(group.GId === groupId){
-                console.log("group Member -> ",group.GroupMembers);
-                setMemberList(group.GroupMembers);
+        setShowMemberList(false);
+        setListLoading(true);
+        let GroupMembers = []
+        for (const group of groupsData) {
+            if (group.GId === groupId) {
+                GroupMembers = group.GroupMembers;
+                break;
             }
-        })
+        }
+
+        let memberNames = [];
+        for(const member of GroupMembers)  {
+            const memberName = await commonApiCalls.getNameFromId(member);
+
+            if(memberName) {
+                const memberObj = {
+                    "UId" : member,
+                    "UName" : memberName
+                }
+                memberNames.push(memberObj);
+            }
+        }
+        setMemberNames(memberNames);
+        setShowMemberList(true);
+        setListLoading(false);
     }
 
     const getGroups = async() =>{
@@ -62,7 +80,6 @@ const Home = () =>{
                         "GName": group.GName,
                         "GId": group.GId
                     }));
-                    console.log("groupNames -> ",groupNames);
                     setGroupNames(groupNames);
                 } else {
                     alert("Some error in getting group call")
@@ -113,7 +130,8 @@ const Home = () =>{
     const toggleExpenseOverlay = () => {
         setIsOpenExpense(!isOpenExpense);
         setGroupId('');
-        setMemberList([]);
+        setShowMemberList(false);
+        setMemberNames([]);
     }
 
     const fallbackDiv = () => {
@@ -279,6 +297,7 @@ const Home = () =>{
                 </div>
                 <form className="addGroup_form" onSubmit={addGroup}>
                     <input 
+                        className="addGroup_form_input"
                         placeholder="Group Name" 
                         value={groupName}
                         onChange={(e)=>{
@@ -292,49 +311,19 @@ const Home = () =>{
                 </form>
             </Overlay>
 
-            <Overlay isOpen={isOpenExpense} onClose={toggleExpenseOverlay}>
-                <div className="addGroup_top">
-                    <h1>Add Your Expense</h1>
-                </div>
-                <form className="addGroup_form">
-                    <DynamicDropdown groupNames={groupNames} setGroupId={setGroupId}/>
-                    {groupId!== '' &&
-                        <>
-                            <input 
-                                className=""
-                                placeholder="Enter a description"
-                            />
-                            <input 
-                                className=""
-                                style={{marginTop : "5px"}}
-                                placeholder="Amount"
-                            />
-                            <button className="select_member_btn" onClick={ getGroupMembers}>
-                                Select members involved
-                            </button>
-
-                            {memberlist.length === 0 ? null : 
-                                <div className="member-list-container">
-                                    <p>Members</p>
-                                    <div className="member-list">
-                                        {memberlist.map((member) =>{
-                                            return (
-                                            <div key={member} className="member-list-item">
-                                                <p>500</p>
-                                                <p>{member}</p>
-                                            </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            }
-
-                        </>
-                        
-                    }
-                    
-                </form>
-            </Overlay>
+            <ExpenseOverlay 
+                isOpenExpense={isOpenExpense}
+                toggleExpenseOverlay = {toggleExpenseOverlay}
+                groupNames={groupNames}
+                setGroupId={setGroupId}
+                memberlist={memberNames}
+                groupId={groupId}
+                getGroupMembers={getGroupMembers}
+                loading={loading}
+                showMemberList = {showMemberList}
+                listLoading = {listLoading}
+            />
+            
         </div>
     )
 }
