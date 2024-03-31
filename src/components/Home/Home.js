@@ -1,4 +1,4 @@
-import React, { Suspense, lazy, useEffect, useState } from "react";
+import React, { Suspense, createContext, lazy, useEffect, useState } from "react";
 import './Home.css';
 import { useSelector } from "react-redux";
 import Overlay from "../Common/Overlay/Overlay";
@@ -12,6 +12,8 @@ import ExpenseOverlay from "../Common/Overlay/ExpenseOverlay/ExpenseOverlay";
 import  commonApiCalls from "../Common/commonApiCalls";
 
 const Home = () =>{
+
+    const HomeContext = createContext();
 
     const [groupsData,setGroupsData] = useState([]);
     const email = localStorage.getItem('userEmail');
@@ -31,16 +33,36 @@ const Home = () =>{
     const [overlayLoader,setOverlayLoader] = useState(false);
     const [groupNames,setGroupNames] = useState([]);
     const [memberNames,setMemberNames] = useState([]);
+    const [friends,setFriends] = useState([]);
 
     useEffect(()=>{
         if(isAuth) {
             setAuth(true);
         }
         getGroups();
+        getFriends();
     },[]);
 
-    const getGroupMembers = async (e) => {
-        e.preventDefault();
+    const getFriends = async(e) => {
+        console.log("here");
+        try {
+            const userObj = {
+                "email" : email
+            }
+            await axios.post(`${SERVER_ADDRESS}/getFriends`,userObj).then((res) => {
+                const resFriends = res.data.friends;
+                console.log(resFriends);
+                if(resFriends.length > 0) {
+                    setFriends(resFriends);
+                }
+            });
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getGroupMembers = async () => {
         setShowMemberList(false);
         setListLoading(true);
         let GroupMembers = []
@@ -63,9 +85,10 @@ const Home = () =>{
                 memberNames.push(memberObj);
             }
         }
+        console.log("memberNames ->",memberNames);
         setMemberNames(memberNames);
         setShowMemberList(true);
-        setListLoading(false);
+        setListLoading(false);   
     }
 
     const getGroups = async() =>{
@@ -121,7 +144,8 @@ const Home = () =>{
         setOverlayLoader(false);
     }
 
-    const toggleOverlay = () => {
+    const toggleOverlay = (e) => {
+        e.preventDefault();
         setErrorMsg("");
         setGroupName("");
         setIsOpen(!isOpen);
@@ -322,6 +346,9 @@ const Home = () =>{
                 loading={loading}
                 showMemberList = {showMemberList}
                 listLoading = {listLoading}
+                toggleOverlay={toggleOverlay}
+                friends={friends}
+                getFriends={getFriends}
             />
             
         </div>

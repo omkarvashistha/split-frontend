@@ -76,8 +76,20 @@
     font-size: 1rem;
 }
 
+.member-list-top{
+  display: flex;
+  margin: 1%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 3%;
+}
+
+.member-list-divide-equal{
+  font-size: 14px;
+}
+
 .add-transaction-btn{
-    padding: 2% 2%;
+    padding: 1%;
     margin : 2% 0;
     font-family: 'Poppins';
     cursor: pointer;
@@ -91,5 +103,31 @@
 }
 
 .add-transaction-btn:hover {
-    background-color: #45a21a;
+    background-color: #56cb1f;
+    box-shadow: 0 0 2px #56cb1f;
+    color: white;
+}
+
+.addFriends_btn_container{
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+  justify-content: space-around;
+}
+
+.addFriends_btn_container span{
+  margin-top: 1%;
+}
+
+.addFriends_btn{
+  margin: 0;
+  font-size: 0.7rem;
+  cursor : pointer;
+  color : rgba(0, 0, 255, 0.723)
+
+}
+
+.addFriends_btn:hover{
+  text-decoration: underline;
 }

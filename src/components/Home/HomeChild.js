@@ -17,8 +17,6 @@ import axios from "axios";
             "UId" : GroupOwner
         }
         await axios.post(`${SERVER_ADDRESS}/getTransactionForGroup`,body).then((res)=>{
-            console.log("res. data => ",res.data);
-
         }).catch(()=>{
             
         })

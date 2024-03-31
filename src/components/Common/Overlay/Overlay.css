@@ -24,6 +24,7 @@
     height: auto;
     box-shadow: 0 0 2px black;
     border-radius : 18px;
+    overflow-y: auto;
 }
 
 .overlay_controls {

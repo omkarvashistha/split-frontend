@@ -1,0 +1,56 @@
+.friendList-container{
+    margin : 1% 5%;
+    box-shadow: 0 0 1px black;
+    padding: 2% 0;
+    font-style: 'Poppins';
+}
+
+.no-friend-container{
+    margin : 1%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.no-friend-container span{
+    font-size: 0.8rem;
+}
+
+.add-friend-btn{
+    width : 50%;
+    font-size: 14px;
+    background-color: rgb(161, 212, 84);
+    color: white;
+    border: none;
+    padding: 2%;
+    cursor: pointer;
+    font-weight: 700;
+    border-radius: 10px;
+    margin-top: 2%;
+}
+
+.add-friend-btn:hover{
+    background-color: rgb(163, 236, 36);
+}
+
+.add-friend-input{
+    margin : 1% 0;
+    padding: 2% 1%;
+    border-radius: 5px;
+    
+}
+
+.friendList-item{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid black;
+    margin: 1% 0;
+}
+
+.btn-space{
+    padding: 2%;
+    margin: 1%;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
