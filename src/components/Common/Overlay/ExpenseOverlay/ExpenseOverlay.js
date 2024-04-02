@@ -5,7 +5,7 @@ import './ExpenseOverlay.css'
 import Spinner from "../../Spinner/Spinner";
 import FriendList from "../../FriendList/FriendList";
 import axios from "axios";
-import { TEST_SERVER } from "../../../Constants/constants";
+import { SERVER_ADDRESS, TEST_SERVER } from "../../../Constants/constants";
 import Alert from "../../Alert/Alert";
 
 const ExpenseOverlay = ({
@@ -220,7 +220,7 @@ const ExpenseOverlay = ({
            }
 
            console.log("reqBody ->",reqBody);
-           await axios.post(`${TEST_SERVER}/addTransaction`,reqBody).then((res) => {
+           await axios.post(`${SERVER_ADDRESS}/addTransaction`,reqBody).then((res) => {
                 const responseCode = res.data.code;
 
                 if(responseCode === 100) {
