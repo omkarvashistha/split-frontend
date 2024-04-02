@@ -1,9 +1,12 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect,useRef,useState } from "react";
 import Overlay from "../Overlay";
 import DynamicDropdown from "../../DynamicDropdown/DynamicDropdown";
 import './ExpenseOverlay.css'
 import Spinner from "../../Spinner/Spinner";
 import FriendList from "../../FriendList/FriendList";
+import axios from "axios";
+import { TEST_SERVER } from "../../../Constants/constants";
+import Alert from "../../Alert/Alert";
 
 const ExpenseOverlay = ({
     isOpenExpense,
@@ -16,16 +19,16 @@ const ExpenseOverlay = ({
     amount = '',
     loading = true,
     showMemberList = false,
+    setShowMemberList,
     listLoading = false,
-    toggleOverlay,
     friends = [],
     getFriends
     }) => {
 
     const [members, setMembers] = useState(memberlist.map(member => ({
         ...member,
-        value: 0,
-        isSelected: false,
+        value: parseFloat(amount) / memberlist.length,
+        isSelected: true, // Default to selected
     })));
 
     /*Overlay States */
@@ -39,21 +42,59 @@ const ExpenseOverlay = ({
 
     const [friendLoader,setFriendLoader] = useState(false);
     const [openFriendList,setOpenFriendList] = useState(false);
+    const [transactionLoader,setTransactionLoader] = useState(false);
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('Here will be the Alert message');
+    const [alertClass,setAlertClass] = useState('');
+
+    const handleIsEqualChange = (e) => {
+        console.log("here");
+        setIsEqual(prevIsEqual => {
+            const newIsEqual = !prevIsEqual;
+            if (newIsEqual) {
+                const selectedMembersCount = members.filter(member => member.isSelected).length;
+                const individualAmount = selectedMembersCount > 0 ? parseFloat(totalAmount) / selectedMembersCount : 0;
+    
+                setMembers(members.map(member => ({
+                    ...member,
+                    value: member.isSelected ? individualAmount : 0,
+                })));
+            }
+            return newIsEqual;
+        });
+    }; 
+
 
     useEffect(()=>{
         console.log(members);
-        setMembers(memberlist.map(member => ({
-            ...member,
-            value: 0, // Initialize additional properties as needed
-            isSelected: false,
-          })));
+        if (description !== '' && totalAmount !== '') {
+            setMembers(memberlist.map(member => ({
+                ...member,
+                value: 0, // Initialize additional properties as needed
+                isSelected: false,
+            })));
+        }
+    },[groupId,memberlist]);
 
-          return () => {
+    useEffect(() => {
+        // Reset description and amount when groupId changes
+        setDescription('');
+        setTotalAmount('');
+        setShowMemberList(false);
+    }, [groupId]);
+    
+    useEffect(() => {
+        // Reset description and amount when the overlay is closed
+        if (!isOpenExpense) {
             setDescription('');
             setTotalAmount('');
-            setError('');
-          }
-    },[memberlist]);
+            setShowMemberList(false);
+        }
+    }, [isOpenExpense]);
+
+    // This useEffect reacts to changes in isEqual, totalAmount, or members' selection state
+
 
     const handleGetGroup = async(e) => {
         e.preventDefault();
@@ -79,27 +120,31 @@ const ExpenseOverlay = ({
 
     const updateMembers = (newMembers) => {
         setMembers(currentMembers => {
-            // Concatenate current members with newMembers, avoiding duplicates
-            let updatedMembers = [...currentMembers];
-            newMembers.forEach(newMember => {
-                if (!updatedMembers.some(member => member.UId === newMember.UId)) {
-                    updatedMembers.push({ ...newMember, isSelected: false, value: 0 });
-                }
-            });
+            let updatedMembers = [...currentMembers, ...newMembers.filter(newMember => 
+                !currentMembers.some(member => member.UId === newMember.UId))];
     
-            // If the total amount is defined and we're dividing equally, update each member's value
-            if (totalAmount && updatedMembers.length > 0 && isEqual) {
-                const individualAmount = parseFloat(totalAmount) / updatedMembers.length;
+            if (isEqual) {
+                const selectedMembersCount = updatedMembers.filter(member => member.isSelected).length;
+                const individualAmount = selectedMembersCount > 0 ? parseFloat(totalAmount) / selectedMembersCount : 0;
+    
                 updatedMembers = updatedMembers.map(member => ({
                     ...member,
-                    value: individualAmount
+                    value: member.isSelected ? individualAmount : 0,
+                    isSelected: member.isSelected
+                }));
+            } else {
+                // When isEqual is false, new members should have a value of 0
+                updatedMembers = updatedMembers.map(member => ({
+                    ...member,
+                    value: member.isSelected ? member.value : 0,
+                    isSelected: member.isSelected
                 }));
             }
     
             return updatedMembers;
         });
     };
-
+    
     const getFriendList = async() => {
         setOpenFriendList(true);
         setFriendLoader(true);
@@ -107,14 +152,29 @@ const ExpenseOverlay = ({
     }
 
     const handleCheckboxChange = (id) => {
-        const updatedMembers = members.map((member) => {
-          if (member.UId === id) {
-            return { ...member, isSelected: !member.isSelected };
-          }
-          return member;
+        setMembers(currentMembers => {
+            const updatedMembers = currentMembers.map(member => {
+                if (member.UId === id) {
+                    // Toggle isSelected status
+                    return { ...member, isSelected: !member.isSelected };
+                }
+                return member;
+            });
+    
+            if (isEqual) {
+                const selectedMembersCount = updatedMembers.filter(member => member.isSelected).length;
+                const individualAmount = selectedMembersCount > 0 ? parseFloat(totalAmount) / selectedMembersCount : 0;
+    
+                // Update values based on selection
+                return updatedMembers.map(member => ({
+                    ...member,
+                    value: member.isSelected ? individualAmount : 0,
+                }));
+            }
+    
+            // If isEqual is not checked, don't modify the values
+            return updatedMembers;
         });
-        //console.log("Updated Member ->",updatedMembers);
-        setMembers(updatedMembers);
     };
 
     const handleInputChange = (id, newValue) => {
@@ -128,17 +188,66 @@ const ExpenseOverlay = ({
         setMembers(updatedMembers);
     };
 
-    const addTransaction = (event) => {
+    const addTransaction = async(event) => {
         event.preventDefault();
-        members.forEach(member => {
-            if(member.isSelected) {
-                const obj = {
-                    "UId" : member.UId,
-                    "cost" : member.value
+        if(description === ''){
+            setError('Description is empty');
+            setDesError(true);
+            setAmtError(false);
+        }
+        else if(totalAmount === '') {
+            setDesError(false);
+            setAmtError(true);
+            setError("Total amount is empty")
+        }
+        else{
+            setTransactionLoader(true);
+           const users = members.reduce((accumulator, member) => {
+                            if (member.isSelected) {
+                            accumulator.push({ [member.UId]: member.value });
+                            }
+                            return accumulator;
+                        }, []);
+           console.log("users ->",users);
+           const email = localStorage.getItem('userEmail');
+                    
+           const reqBody = {
+                "amount" : totalAmount,
+                "users" : users,
+                "paidBy" : email,
+                "GId" : groupId,
+                "title" : description
+           }
+
+           console.log("reqBody ->",reqBody);
+           await axios.post(`${TEST_SERVER}/addTransaction`,reqBody).then((res) => {
+                const responseCode = res.data.code;
+
+                if(responseCode === 100) {
+                    setAlertMessage('Transaction added successfully!');
+                    setShowAlert(true);
+                    setAlertClass('success');
+                    // Reset the alert after a few seconds
+                    setGroupId('');
+                    setTimeout(() => {setShowAlert(false); }, 3000);
+                } else if (responseCode === 101) {
+                    setAlertMessage('Transaction not added try again');
+                    setShowAlert(true);
+                    setAlertClass('failed');
+                    // Reset the alert after a few seconds
+                    setTimeout(() => setShowAlert(false), 5000);
                 }
-                console.log(obj);
-            }
-        });
+           }).catch((err) => {
+                console.error('Error in adding transaction:', err);
+                setAlertMessage('Error in adding transaction. Please try again.');
+                setShowAlert(true);
+                // Reset the alert after a few seconds
+                setTimeout(() => setShowAlert(false), 5000)
+           }).finally(()=>{
+                setTransactionLoader(false);
+           })
+        }
+        
     };
 
     const retryRequest = () => {
@@ -157,6 +266,7 @@ const ExpenseOverlay = ({
 
     return(
         <Overlay isOpen={isOpenExpense} onClose={toggleExpenseOverlay}>
+                <Alert message={alertMessage} visible={showAlert} onClose={() => setShowAlert(false)}  alertClass={alertClass}/>
                 <div className="addGroup_top">
                     <h1>Add Your Expense</h1>
                 </div>
@@ -208,9 +318,7 @@ const ExpenseOverlay = ({
                                             <input 
                                                 type="checkbox"
                                                 checked={isEqual}
-                                                onChange={()=>{
-                                                    setIsEqual(!isEqual);
-                                                }}
+                                                onChange={handleIsEqualChange}
                                             />
                                             Divide Equally
                                         </div>
@@ -227,10 +335,7 @@ const ExpenseOverlay = ({
                                                         key={member.UId}
                                                         handleCheckboxChange={handleCheckboxChange}
                                                         handleInputChange={handleInputChange}
-                                                        isEqual={isEqual}
-                                                        amount = {totalAmount}
                                                         member={member}
-                                                        totalMember = {members.length}
                                                     />
                                                 </> 
                                             )
@@ -255,7 +360,7 @@ const ExpenseOverlay = ({
                                     }
                                 </div>
                             }
-                            <button className="add-transaction-btn" onClick={addTransaction}>Add Transaction</button>    
+                            <button className="add-transaction-btn" onClick={addTransaction}>{transactionLoader ? <Spinner size="small"/> : "Add Transaction"}</button>    
 
                         </>
                         
@@ -269,33 +374,33 @@ const ExpenseOverlay = ({
 const MemberList = ({
     handleCheckboxChange,
     handleInputChange,
-    isEqual,
-    amount,
-    member,
-    totalMember
-    }) => {
+    member
+}) => {
+    // Use the member.value directly to show the amount for each member
+    const [value, setValue] = useState(member.value);
 
-    const [value,setValue] = useState(amount/totalMember);
+    useEffect(() => {
+        // Update the value displayed whenever the member's value changes
+        setValue(member.isSelected ? member.value : 0);
+    }, [member.value, member.isSelected]);
 
     const handleChange = (event) => {
-        const newValue = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
-        if (event.target.type === 'checkbox') {
+        const { type, checked, value: newValue } = event.target;
+        
+        if (type === 'checkbox') {
             handleCheckboxChange(member.UId);
-        } else {
+            // If unchecking, set the value to 0 immediately in the UI
+            if (!checked) {
+                setValue(0);
+            }
+        } else if (type === 'number' && member.isSelected) {
+            // Update the value if the input changes (and the member is selected)
+            setValue(newValue);
             handleInputChange(member.UId, newValue);
         }
     };
 
-    useEffect(()=>{
-        console.log("isEqual ->",isEqual);
-        if(isEqual){
-            setValue(amount/totalMember);
-        } else {
-            setValue(0);
-        }
-    },[amount, totalMember, isEqual])
-    
-    return(
+    return (
         <>       
             <div className="member-list">
                 <input
@@ -307,15 +412,14 @@ const MemberList = ({
                 <input
                     type="number"
                     value={value}
+                    disabled={!member.isSelected} // Disable input if member is not selected
                     className="member-list-val"
-                    onChange={(e) => {
-                        setValue(e.target.value);
-                        handleChange(e);
-                    }}
+                    onChange={handleChange}
                 />
             </div>  
         </>
-    )
-}
+    );
+};
+
 
 export default ExpenseOverlay;

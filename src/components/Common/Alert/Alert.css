@@ -1,0 +1,33 @@
+.alert {
+    font-family: 'Poppins';
+    position: fixed;
+    top: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1000; /* Make sure it's above other content */
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-weight: 600;
+}
+
+.alert-success{
+    background-color: rgb(183, 238, 100);
+    color: #22721c;
+}
+
+.alert-failed{
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+@media only screen and  (max-width : 965px) {
+    .alert{
+        width : 40%;
+    }
+}

@@ -64,11 +64,11 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
     const addToGroup = (e) => {
         e.preventDefault();
         const selected = selectedFriends.filter(friend => friend.isSelected).map(friend => {
-            // Ensure the object structure here matches what 'members' expect
-            return { ...friend, isSelected : false };
+            return { ...friend, isSelected: false, value: 0 }; // Set initial value to 0
         });
         updateMembers(selected);
     };
+    
   
     return(
         <div className="friendList-container">

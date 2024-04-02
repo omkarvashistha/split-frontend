@@ -345,6 +345,7 @@ const Home = () =>{
                 getGroupMembers={getGroupMembers}
                 loading={loading}
                 showMemberList = {showMemberList}
+                setShowMemberList={setShowMemberList}
                 listLoading = {listLoading}
                 toggleOverlay={toggleOverlay}
                 friends={friends}
