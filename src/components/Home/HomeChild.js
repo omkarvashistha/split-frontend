@@ -3,11 +3,13 @@ import './Home.css';
 import { SERVER_ADDRESS, TEST_SERVER } from "../Constants/constants";
 import Overlay from "../Common/Overlay/Overlay";
 import axios from "axios";
+import commonApiCalls from "../Common/commonApiCalls";
+import Spinner from "../Common/Spinner/Spinner";
 
  const HomeChild  = ({groupData}) => {
 
     const {GId,GroupOwner,GName} = groupData
-    const [owner,setOwner] = useState(false);
+    const [owner,setOwner] = useState('');
     const [members,setMembers] = useState([]);
     const [isOpen,setIsOpen] = useState(false);
 
@@ -16,15 +18,32 @@ import axios from "axios";
             "GId" : GId,
             "UId" : GroupOwner
         }
-        await axios.post(`${SERVER_ADDRESS}/getTransactionForGroup`,body).then((res)=>{
-        }).catch(()=>{
-            
-        })
+        const response = await axios.post(`${SERVER_ADDRESS}/getTransactionForGroup`, body);
+        if (response.data && response.data.code === 100) {
+            const finalList = response.data.finalList;
+            let memberArr = [];
+            for (const user of finalList) {
+                const id = user.id;
+                // Wait for the name to be fetched before proceeding
+                const name = await commonApiCalls.getNameFromId(id);
+                const obj = {
+                    "name": name,
+                    "value": user.value
+                };
+                memberArr.push(obj);
+            }
+            console.log("Member arr -> ", memberArr);
+            setMembers(memberArr);
+        }
+        const name = await commonApiCalls.getNameFromId(groupData.GroupOwner);
+        setOwner(name);
     }
 
     useEffect(()=>{
         // Here I would have to get the data for group owner and members
         getTransactionData();
+        
+        
         // if()
     },[]);
 
@@ -37,9 +56,28 @@ import axios from "axios";
         <>
             <div className="home_child_main">
                 <span className="home_child_gname">{groupData.GName}</span>
-                <span className="home_child_owner">{groupData.GroupOwner}</span>
+                <span className="home_child_owner">{`Group Owner : ${owner === ' ' ? <Spinner size="small"/> : owner}`}</span>
                 {groupData.transactions ? 
-                    <div>Your details of cost</div>
+                    <div className="home_child_transaction">
+                        {members.length === 0 ? <Spinner size="small"/> :
+                            members.map((member ,index) => {
+                                return(
+                                    <div className="home_child_transaction_child" key={index}>
+                                        {member.value < 0
+                                            ?
+                                            <span style={{color : "red"}}>
+                                                {`You will give ${member.value} to ${member.name}`}
+                                            </span>
+                                            :
+                                            <span style={{color : "green"}}>
+                                                {`You will get ${member.value} from ${member.name}`}
+                                            </span>
+                                        }
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                     :
                     <span>No Expenses</span>
                 }
