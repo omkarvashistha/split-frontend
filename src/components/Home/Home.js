@@ -239,6 +239,7 @@ const Home = () =>{
                                 autoplay : 'pause',
                                 fixedWidth : "true",
                             }}
+                            
                             tag="section"
                             hasTrack={true}
                         >
@@ -273,42 +274,22 @@ const Home = () =>{
                     ?
                     <>{notLoginContainer()}</>:
                     <div className="home_friend_list">
-                        <div className="test-main">
-                            <div className="test-main-img">
-                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
-                            </div>
-                            <div className="test-main-info">
-                                <h2>Person1</h2>
-                                <h3>Email</h3>
-                            </div>
-                        </div>
-                        <div className="test-main">
-                            <div className="test-main-img">
-                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
-                            </div>
-                            <div className="test-main-info">
-                                <h2>Person 2</h2>
-                                <h3>Email</h3>
-                            </div>
-                        </div>
-                        <div className="test-main">
-                            <div className="test-main-img">
-                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
-                            </div>
-                            <div className="test-main-info">
-                                <h2>Person 3</h2>
-                                <h3>Email</h3>
-                            </div>
-                        </div>
-                        <div className="test-main">
-                            <div className="test-main-img">
-                                <img src="/logo192.png" width={"50px"} height={"50px"}/>
-                            </div>
-                            <div className="test-main-info">
-                                <h2>Person 4</h2>
-                                <h3>Email</h3>
-                            </div>
-                        </div>
+                        {friends.length === 0 ? <Spinner size="medium"/> : 
+                            friends.map((friend,index) => {
+                                return (
+                                    <div className="test-main">
+                                        <div className="test-main-img">
+                                            <img src="./user.png"/>
+                                        </div>
+                                        <div className="test-main-info">
+                                            <h2>{friend.UName}</h2>
+                                            <h3>{friend.email ? friend.email : null}</h3>
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                        
                     </div>  
                     }
                     

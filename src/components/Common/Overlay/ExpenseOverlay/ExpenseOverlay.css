@@ -84,6 +84,10 @@
   padding: 0 3%;
 }
 
+.member-list-container{
+  width : 40%;
+}
+
 .member-list-divide-equal{
   font-size: 14px;
 }
@@ -130,4 +134,18 @@
 
 .addFriends_btn:hover{
   text-decoration: underline;
+}
+
+/* Responsive styles */
+
+@media screen and (max-width : 1200px){
+  .member-list-container{
+    width : 50%;
+  }
+}
+
+@media screen and (max-width : 900px){
+  .member-list-container{
+    width : 60%;
+  }
 }

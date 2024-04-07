@@ -43,6 +43,18 @@
 
 .dropdown-option{
     padding: 10px;
-  cursor: pointer;
-  border-bottom: 1px solid #eee;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+@media screen and (max-width : 900px){
+    .dropdown-main{
+        width : 40%;
+    }
+}
+
+@media screen and (max-width : 750px){
+    .dropdown-main{
+        width : 60%;
+    }
 }

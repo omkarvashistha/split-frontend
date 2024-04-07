@@ -48,3 +48,25 @@
     font-size: 1rem;
 }
 
+@media screen and (max-width : 900px){
+    .overlay_container{
+        width : 60%;
+    }
+
+    .overlay_background{
+        height: 100%;
+        width : 100%;
+    }
+}
+
+@media screen and (max-width : 650px){
+    .overlay_container{
+        width : 55%;
+    }
+}
+
+@media screen and (max-width : 370px) {
+    .overlay_container{
+        width : 70%;
+    }
+}
