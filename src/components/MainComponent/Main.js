@@ -31,7 +31,9 @@ const Main = () => {
     return(
         <>
             <div id="main" className="">
-                <MowMenu/>
+                <MowMenu
+                    setComponent={setComponent}
+                />
                 <nav className="main-navbar ">
                     <div className="main-app-logo">
                         <img src={logo} alt="split logo" width={"100px"} height={"100px"}/>

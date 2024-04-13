@@ -1,107 +1,38 @@
-.mobile-navbar-container {
-    display: none;
-    position: fixed;
-    right : 10%;
-    bottom : 20px;
-    margin-bottom: 20px;
-    width : 85%;
-  }
-  
-  .mobile-navbar-button {
-    border: none;
-    background-color: black;
-    padding: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 12px;
-  }
-  
-  .menu-icon {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .menu-icon span {
-    display: block;
-    width: 90%;
-    height: 2px;
-    background-color: white;
-    margin: 1.8px 0;
-    transition: transform 0.7s ease;
-  }
-  
-  .mobile-navbar-container.open .menu-icon span:nth-child(1) {
-    transform: rotate(45deg) translate(4px, 4px);
-  }
-  
-  .mobile-navbar-container.open .menu-icon span:nth-child(2) {
-    opacity: 0;
-  }
-  
-  .mobile-navbar-container.open .menu-icon span:nth-child(3) {
-    transform: rotate(-45deg) translate(4px, -4px);
-  }
-  
-  .mobile-navbar-items {
-    position: relative;
-    background-color: black;
-    padding: 10px;
-    box-sizing: border-box;
-    border-radius: 20px;
-    margin-right: 20px;
-    width : 100%;
-  }
+.mobile-navbar-container{
+  display: none;
+  position: fixed; /* Keep the menu fixed on bottom */
+  bottom: 0;
+  left: 5px; /* Align to the left */
+  width: 95%; /* Full screen width */
+  height: 50px; /* Adjust height as needed */
+  background-color: #95aff1fd; /* Customize background color */
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  align-items: center; /* Align items vertically */
+  padding: 1%;
+  font-family: 'Poppins';
+  font-size: 14px;
+  z-index: 8;
+}
 
-  @keyframes slideBackToButton {
-    0% {
-      bottom: 10px;
-      transform: translateX(0);
-      opacity: 1;
-    }
-    100% {
-      bottom: calc(100% + 10px);
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-  }
+.mobile-navbar-list{
+  display: flex;
+  list-style: none;
+  padding: 1%;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
 
-  @keyframes slideFromButton {
-    0% {
-      bottom: calc(100% + 10px);
-      transform: translateX(-100%);
-      opacity: 0;
-    }
-    100% {
-      bottom: 10px;
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  .mobile-navbar-items ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    justify-content: space-evenly;
-    font-family: 'Poppins';
-    font-size: 1rem;
-  }
-  
-  .mobile-navbar-items ul li {
-    margin: 5px 0;
-    color: white;
-  }
-  
 
-@media screen and (max-width : 491px) {
-    .mobile-navbar-container{
-        display: flex;
-        flex-direction: row-reverse;
-        align-items: flex-end;
-    }
+
+@media screen and (max-width : 492px) {
+  .mobile-navbar-container{
+      display: inline-block;
+  }
+}
+
+@media screen and (max-width : 302px) {
+  .mobile-navbar-container{
+    font-size: 12px;
+  }
 }

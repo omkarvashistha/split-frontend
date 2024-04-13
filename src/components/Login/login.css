@@ -46,3 +46,33 @@
 .form_btn:hover{
     background-color: rgba(0, 0, 0, 0.80);
 }
+
+@media screen and (max-width : 1000px) {
+    .login_form{
+        width :  45%;
+    }
+}
+
+@media screen and (max-width : 700px) {
+    .login_form{
+        width :  60%;
+    }
+}
+
+@media screen and (max-width : 475px) {
+    .login_form{
+        width :  70%;
+    }
+
+    .login_container{
+        width : 80%;
+        margin-left: -7%;
+    }
+}
+
+@media screen and (max-width : 350px) {
+    .login_form{
+        width :  85%;
+        margin-top: 5%;
+    }
+}

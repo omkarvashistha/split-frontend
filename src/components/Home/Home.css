@@ -373,6 +373,7 @@
     align-items: center;
     position: relative;
     font-size: 1.5rem;
+    text-align: center;
 }
 
 .not_login_container::before {
@@ -466,6 +467,12 @@
 
     .addGroup_top{
         font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width : 492px) {
+    .home_friend_list{
+        margin-bottom: 60px;
     }
 }
 

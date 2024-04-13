@@ -1,32 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './MowMenu.css'; // Import CSS file for styling
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-const MowMenu = () => { 
+const MowMenu = ({setComponent}) => { 
   const [isOpen, setIsOpen] = useState(false);
-  const navItems = ["Home", "Friends", "Activity", "Account"];
+  const navItems = [{"name" : "Home" , "component" : 'home'},
+                    {"name" : "Friends" , "component" : 'home'},
+                    {"name" : "Activity" , "component" : 'home'}, 
+                    {"name" : "Account" , "component" : 'home'}];
+  const [authenticated,setAuth] = useState(false);
+  const navigate = useNavigate();
+  const isAuth = useSelector((state) => state.isAuthenticated.isAuth);
 
   const toggleNavbar = () => {
     setIsOpen(!isOpen);
   };
 
+  useEffect(()=>{
+      if(isAuth) {setAuth(true)};
+  },[isAuth])
+
   return (
-    <div className={`mobile-navbar-container ${isOpen ? 'open' : ''}`}>
-      <button className="mobile-navbar-button" onClick={toggleNavbar}>
-        <div className="menu-icon">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </button>
-      {isOpen && (
-        <div className='mobile-navbar-items' style={{ animation: isOpen ? 'slideFromButton 0.5s forwards' : 'slideBackToButton 0.5s forwards' }}>
-          <ul className=''>
-            {navItems.map((item, index) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div className={`mobile-navbar-container`}>
+        <ul className='mobile-navbar-list'>
+          {navItems.map((item,index) => (
+            <li key={index} onClick={() => {setComponent(item.component)}}>
+              {item.name}
+            </li>
+          ))}
+          {authenticated ?
+              <li onClick={(e)=>{e.preventDefault(); localStorage.clear(); navigate('/login')}}>    
+                Logout
+              </li>
+              :
+              <li onClick={(e)=>{e.preventDefault(); localStorage.clear(); navigate('/login')}}>    
+                  Login
+              </li>
+          }
+        </ul>
     </div>
   );
 };
