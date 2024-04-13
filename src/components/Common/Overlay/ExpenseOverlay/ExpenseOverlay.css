@@ -94,7 +94,7 @@
 
 .add-transaction-btn{
     padding: 1%;
-    margin : 2% 0;
+    margin : 3% 0;
     font-family: 'Poppins';
     cursor: pointer;
     font-weight: bold;
@@ -147,5 +147,26 @@
 @media screen and (max-width : 900px){
   .member-list-container{
     width : 60%;
+  }
+}
+
+@media screen and (max-width : 500px){
+  .member-list-container{
+    width : 75%;
+    font-size: 0.9rem;
+  }
+
+  .member-list-divide-equal{
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width : 350px){
+  .member-list-container{
+    width : 100%;
+  }
+
+  .member-list-divide-equal{
+    font-size: 12px;
   }
 }

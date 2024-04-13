@@ -19,7 +19,7 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
     })));
 
     useEffect(()=>{
-    },[])
+    },[getFriends])
 
     const addFriend = async(e) => {
         e.preventDefault();
@@ -71,7 +71,9 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
     
   
     return(
+        
         <div className="friendList-container">
+            <Alert message={alertMessage} visible={showAlert} onClose={() => setShowAlert(false)} />
             {friends.length === 0 ? 
                 <div className="no-friend-container">
                     <span>No friend start by adding friend</span>
@@ -84,7 +86,7 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
                     />
                     {error && <div>{error}</div>}
                     <button className="add-friend-btn" onClick={addFriend}>Add Friend</button>
-                    <Alert message={alertMessage} visible={showAlert} onClose={() => setShowAlert(false)} />
+                    
                 </div>
                 :
                 <>
@@ -99,6 +101,19 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
                         </div>
                     ))}
                     <button className="add-friend-btn btn-space" onClick={addToGroup}>Select</button>
+
+                    <div className="no-friend-container" style={{margin : "2% 0"}}>
+                        <input 
+                            type="text"
+                            placeholder="Friend Name"
+                            className="add-friend-input"
+                            value={fName}
+                            onChange={(e) => setFname(e.target.value)}
+                        />
+                        {error && <div>{error}</div>}
+                        <button className="add-friend-btn" onClick={addFriend}>Add Friend</button>
+                        
+                    </div>
                 </>
                 
             }
