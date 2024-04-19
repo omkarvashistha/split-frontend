@@ -3,6 +3,23 @@
   padding: 0;
 }
 
+.link{
+  text-align: left;
+  color : black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.link:hover{
+  text-decoration: underline;
+}
+
+
+.flex-justify-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .App-logo {
   height: 40vmin;
   pointer-events: none;

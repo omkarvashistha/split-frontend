@@ -3,6 +3,7 @@ import './FriendList.css';
 import axios from "axios";
 import { SERVER_ADDRESS, TEST_SERVER } from "../../Constants/constants";
 import Alert from "../Alert/Alert";
+import Spinner from "../Spinner/Spinner";
 
 const FriendList = ({friends,getFriends,updateMembers,members}) => {
     const [fName,setFname] = useState('');
@@ -18,11 +19,19 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
         isSelected: false,
     })));
 
+    const [loading,setLoading] = useState(false);
+
     useEffect(()=>{
-    },[getFriends])
+        setSelectedFriends(friends.map(friend => ({
+            ...friend,
+            value: 0,
+            isSelected: false,
+        })));
+    },[friends])
 
     const addFriend = async(e) => {
         e.preventDefault();
+
         console.log("Here");
         if(fName.length === 0) {
             setError("This field cannot be empty");
@@ -33,7 +42,7 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
             "email" : email,
             "FName" : fName
         }
-
+        setLoading(true);
         await axios.post(`${SERVER_ADDRESS}/addFriend`,obj).then((res) => {
             console.log("inside add Friend call");
             if(res.data.code === 100){
@@ -47,6 +56,8 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
             console.log("Error msg -> ",err);
         }).finally(()=>{
             setShowAlert(false);
+            setLoading(false);
+            setFname('');
         })
         
     }
@@ -111,7 +122,7 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
                             onChange={(e) => setFname(e.target.value)}
                         />
                         {error && <div>{error}</div>}
-                        <button className="add-friend-btn" onClick={addFriend}>Add Friend</button>
+                        <button className="add-friend-btn" onClick={addFriend}>{loading ? <Spinner size="small"/> :  "Add Friend"}</button>
                         
                     </div>
                 </>

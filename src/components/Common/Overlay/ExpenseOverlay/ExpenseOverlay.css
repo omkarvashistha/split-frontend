@@ -136,11 +136,23 @@
   text-decoration: underline;
 }
 
+/*Paid by members parent styles*/
+
+.memberDropdown-parent{
+  width : 50%;
+  margin-top : 1%;
+  font-size : 13px;
+}
+
 /* Responsive styles */
 
 @media screen and (max-width : 1200px){
   .member-list-container{
     width : 50%;
+  }
+
+  .memberDropdown-parent{
+    width : 60%;
   }
 }
 
@@ -168,5 +180,10 @@
 
   .member-list-divide-equal{
     font-size: 12px;
+  }
+
+  .memberDropdown-parent{
+    width : 70%;
+    font-size : 12px;
   }
 }

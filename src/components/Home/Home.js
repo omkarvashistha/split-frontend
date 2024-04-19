@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import Spinner from "../Common/Spinner/Spinner";
 import ExpenseOverlay from "../Common/Overlay/ExpenseOverlay/ExpenseOverlay";
 import  commonApiCalls from "../Common/commonApiCalls";
+import DotSpinner from "../Common/Spinner/DotSpinner";
+import FriendSection from "../Common/FriendSection/FriendSection";
 
 const Home = () =>{
 
@@ -34,6 +36,7 @@ const Home = () =>{
     const [groupNames,setGroupNames] = useState([]);
     const [memberNames,setMemberNames] = useState([]);
     const [friends,setFriends] = useState([]);
+    const [friendLoader,setFriendLoader] = useState(false);
 
     useEffect(()=>{
         if(isAuth) {
@@ -45,7 +48,9 @@ const Home = () =>{
 
     const getFriends = async(e) => {
         console.log("here");
+
         try {
+            setFriendLoader(true);
             const userObj = {
                 "email" : email
             }
@@ -59,6 +64,8 @@ const Home = () =>{
 
         } catch (error) {
             console.log(error);
+        } finally {
+            setFriendLoader(false);
         }
     }
 
@@ -252,7 +259,6 @@ const Home = () =>{
                                             <Suspense fallback={fallbackDiv}>
                                                 <HomeChild key={group.GId} groupData={group}/>
                                             </Suspense>
-                                                
                                         </SplideSlide> 
                                         
                                     )
@@ -268,32 +274,12 @@ const Home = () =>{
                     <h1>Your monthly spending</h1>
                     <img src="/barGraph.png"/>
                 </div>
-                <div className="home_friends_section">
-                    <h1>Friends</h1>
-                    {!authenticated
-                    ?
-                    <>{notLoginContainer()}</>:
-                    <div className="home_friend_list">
-                        {friends.length === 0 ? <Spinner size="medium"/> : 
-                            friends.map((friend,index) => {
-                                return (
-                                    <div className="test-main">
-                                        <div className="test-main-img">
-                                            <img src="./user.png"/>
-                                        </div>
-                                        <div className="test-main-info">
-                                            <h2>{friend.UName}</h2>
-                                            <h3>{friend.email ? friend.email : null}</h3>
-                                        </div>
-                                    </div>
-                                )
-                            })
-                        }
-                        
-                    </div>  
-                    }
-                    
-                </div>
+
+                <FriendSection
+                    friends={friends}
+                    handleLogin={handleLogin}
+                    loading={friendLoader}
+                />
             </div>
 
             <Overlay isOpen={isOpen} onClose={toggleOverlay}>
@@ -331,6 +317,7 @@ const Home = () =>{
                 toggleOverlay={toggleOverlay}
                 friends={friends}
                 getFriends={getFriends}
+                getGroups = {getGroups}
             />
             
         </div>

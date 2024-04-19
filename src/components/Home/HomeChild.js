@@ -5,6 +5,7 @@ import Overlay from "../Common/Overlay/Overlay";
 import axios from "axios";
 import commonApiCalls from "../Common/commonApiCalls";
 import Spinner from "../Common/Spinner/Spinner";
+import DotSpinner from "../Common/Spinner/DotSpinner";
 
  const HomeChild  = ({groupData}) => {
 
@@ -59,18 +60,19 @@ import Spinner from "../Common/Spinner/Spinner";
                 <span className="home_child_owner">{`Group Owner : ${owner === ' ' ? <Spinner size="small"/> : owner}`}</span>
                 {groupData.transactions ? 
                     <div className="home_child_transaction">
-                        {members.length === 0 ? <Spinner size="small"/> :
+                        {members.length === 0 ? <DotSpinner /> :
                             members.map((member ,index) => {
                                 return(
+                                    
                                     <div className="home_child_transaction_child" key={index}>
                                         {member.value < 0
                                             ?
                                             <span style={{color : "red"}}>
-                                                {`You will give ${member.value} to ${member.name}`}
+                                                {`You will give ${Math.abs(member.value).toFixed(1)} to ${member.name}`}
                                             </span>
                                             :
                                             <span style={{color : "green"}}>
-                                                {`You will get ${member.value} from ${member.name}`}
+                                                {`You will get ${Math.abs(member.value).toFixed(1)} from ${member.name}`}
                                             </span>
                                         }
                                     </div>

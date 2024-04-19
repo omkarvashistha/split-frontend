@@ -15,6 +15,7 @@ const DynamicDropdown = ({ groupNames , setGroupId, loading }) => {
     };
 
   useEffect(()=>{
+    console.log("group ->" , groupNames)
   },[])
 
   return (

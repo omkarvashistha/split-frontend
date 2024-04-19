@@ -7,6 +7,9 @@ import FriendList from "../../FriendList/FriendList";
 import axios from "axios";
 import { SERVER_ADDRESS, TEST_SERVER } from "../../../Constants/constants";
 import Alert from "../../Alert/Alert";
+import DotSpinner from "../../Spinner/DotSpinner";
+import { Dropdown } from "bootstrap";
+import MemberDropdownn from "../../MemberDropdown/MemberDropdown";
 
 const ExpenseOverlay = ({
     isOpenExpense,
@@ -22,7 +25,8 @@ const ExpenseOverlay = ({
     setShowMemberList,
     listLoading = false,
     friends = [],
-    getFriends
+    getFriends,
+    getGroups
     }) => {
 
     const [members, setMembers] = useState(memberlist.map(member => ({
@@ -35,6 +39,7 @@ const ExpenseOverlay = ({
 
     const [description,setDescription] = useState('');
     const [totalAmount,setTotalAmount] = useState('');
+    const [paidBy,setPaidBy] = useState('');
     const [error,setError] = useState("");
     const [desError,setDesError] = useState(false);
     const [amtError,setAmtError] = useState(false);
@@ -43,10 +48,28 @@ const ExpenseOverlay = ({
     const [friendLoader,setFriendLoader] = useState(false);
     const [openFriendList,setOpenFriendList] = useState(false);
     const [transactionLoader,setTransactionLoader] = useState(false);
+    const [showFriendList,setShowFriendList] = useState(false);
 
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState('Here will be the Alert message');
     const [alertClass,setAlertClass] = useState('');
+
+    useEffect(() => {
+        // This effect updates member values when `totalAmount` changes
+        if (isEqual) {
+            updateEqualDivision();
+        }
+    }, [totalAmount]);  // React to changes in totalAmount or members
+    
+    const updateEqualDivision = () => {
+        const selectedMembersCount = members.filter(member => member.isSelected).length;
+        const individualAmount = selectedMembersCount > 0 ? parseFloat(totalAmount) / selectedMembersCount : 0;
+    
+        setMembers(members.map(member => ({
+            ...member,
+            value: member.isSelected ? individualAmount : 0,
+        })));
+    };
 
     const handleIsEqualChange = (e) => {
         console.log("here");
@@ -81,7 +104,9 @@ const ExpenseOverlay = ({
         // Reset description and amount when groupId changes
         setDescription('');
         setTotalAmount('');
+        setPaidBy('');
         setShowMemberList(false);
+        
     }, [groupId]);
     
     useEffect(() => {
@@ -145,11 +170,7 @@ const ExpenseOverlay = ({
         });
     };
     
-    const getFriendList = async() => {
-        setOpenFriendList(true);
-        setFriendLoader(true);
-        setFriendLoader(false);
-    }
+
 
     const handleCheckboxChange = (id) => {
         setMembers(currentMembers => {
@@ -200,6 +221,9 @@ const ExpenseOverlay = ({
             setAmtError(true);
             setError("Total amount is empty")
         }
+        else if(paidBy === '') {
+            setError("PaidBy is not selected")
+        }
         else{
             setTransactionLoader(true);
            const users = members.reduce((accumulator, member) => {
@@ -208,13 +232,12 @@ const ExpenseOverlay = ({
                             }
                             return accumulator;
                         }, []);
-           console.log("users ->",users);
-           const email = localStorage.getItem('userEmail');
+           console.log("users ->",paidBy);
                     
            const reqBody = {
                 "amount" : totalAmount,
                 "users" : users,
-                "paidBy" : email,
+                "paidBy" : paidBy,
                 "GId" : groupId,
                 "title" : description
            }
@@ -244,6 +267,7 @@ const ExpenseOverlay = ({
                 // Reset the alert after a few seconds
                 setTimeout(() => setShowAlert(false), 5000)
            }).finally(()=>{
+                getGroups();
                 setTransactionLoader(false);
            })
         }
@@ -261,6 +285,12 @@ const ExpenseOverlay = ({
     const amtBorder = {
         ...desBorder,
         marginTop : "5px"
+    }
+
+    const handleClick = (e) => {
+        e.preventDefault();
+        console.log("openFriendList ->",openFriendList);
+        setOpenFriendList(!openFriendList);
     }
 
 
@@ -306,59 +336,70 @@ const ExpenseOverlay = ({
 
                             {!showMemberList ?  
                                 <>
-                                    {listLoading ? <Spinner size="small"/> : null}
+                                    {listLoading ? <div className="flex-justify-center" style={{marginTop : "2%"}}><DotSpinner size="small"/></div> : null}
                                 </>
                                 :
-                                <div className="member-list-container" 
-                                    style={showMemberList ? {visibility : 'visible'} : {visibility : 'hidden'}}
-                                >
-                                    <div className="member-list-top">
-                                        <p>Select Member</p>
-                                        <div className="member-list-divide-equal">
-                                            <input 
-                                                type="checkbox"
-                                                checked={isEqual}
-                                                onChange={handleIsEqualChange}
-                                            />
-                                            Divide Equally
+                                <>
+                                    <div className="flex-justify-center memberDropdown-parent" style={{}}>
+                                       <span style={{marginRight : "16px",fontFamily:'Poppins'}}>
+                                            Paid by 
+                                        </span>  
+                                        <MemberDropdownn 
+                                            members={members} 
+                                            setPaidBy={setPaidBy}    
+                                        />
+                                    </div>
+                                    <div className="member-list-container" 
+                                        style={showMemberList ? {visibility : 'visible'} : {visibility : 'hidden'}}
+                                    >
+                                        <div className="member-list-top">
+                                            <p>Select Member</p>
+                                            <div className="member-list-divide-equal">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={isEqual}
+                                                    onChange={handleIsEqualChange}
+                                                />
+                                                Divide Equally
+                                            </div>
                                         </div>
-                                    </div>
-                                    {members.length === 0  ? null :
-                                        members.map((member) => {
-                                            let cost = 0;
-                                            if(isEqual){
-                                                cost = totalAmount/member.length;
-                                            }
-                                            return (
-                                                <>
-                                                    <MemberList
-                                                        key={member.UId}
-                                                        handleCheckboxChange={handleCheckboxChange}
-                                                        handleInputChange={handleInputChange}
-                                                        member={member}
-                                                    />
-                                                </> 
-                                            )
-                                        })}
-                                    
-                                    <div className="addFriends_btn_container">
-                                        <span>Add member to group</span>
-                                        <a onClick={getFriendList} className="addFriends_btn" >Show more</a>
-                                    </div>
+                                        {members.length === 0  ? null :
+                                            members.map((member) => {
+                                                let cost = 0;
+                                                if(isEqual){
+                                                    cost = totalAmount/member.length;
+                                                }
+                                                return (
+                                                    <>
+                                                        <MemberList
+                                                            key={member.UId}
+                                                            handleCheckboxChange={handleCheckboxChange}
+                                                            handleInputChange={handleInputChange}
+                                                            member={member}
+                                                        />
+                                                    </> 
+                                                )
+                                            })}
+                                        
+                                        <div className="addFriends_btn_container">
+                                            <span>Add member to group</span>
+                                            <a onClick={handleClick} className="addFriends_btn" >{openFriendList ? "Show less" : "Show more"}</a>
+                                        </div>
 
-                                    {friendLoader ? 
-                                        <Spinner size="small"/>
-                                        :
-                                        openFriendList 
-                                        ? 
-                                        <FriendList 
-                                            friends={friends} 
-                                            getFriends={getFriends} 
-                                            updateMembers={updateMembers}
-                                            members = {memberlist}
-                                        />   : null
-                                    }
-                                </div>
+                                        {friendLoader ? 
+                                            <Spinner size="small"/>
+                                            :
+                                            openFriendList 
+                                            ? 
+                                            <FriendList 
+                                                friends={friends} 
+                                                getFriends={getFriends} 
+                                                updateMembers={updateMembers}
+                                                members = {memberlist}
+                                            />   : null
+                                        }
+                                    </div>
+                                </>
                             }
                             <button className="add-transaction-btn" onClick={addTransaction}>{transactionLoader ? <Spinner size="small"/> : "Add Transaction"}</button>    
 

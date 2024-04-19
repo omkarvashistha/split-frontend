@@ -3,8 +3,9 @@ import '../Login/login.css';
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthentication } from "../../Redux/actions/actions";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SERVER_ADDRESS } from "../Constants/constants";
+import Spinner from "../Common/Spinner/Spinner";
 
 /**
  * 
@@ -24,6 +25,7 @@ const Signup = () => {
     const dispatch = useDispatch();
     const isAuth = useSelector((state) => state.isAuthenticated.isAuth); 
     const navigate = useNavigate();
+    const [loading,setLoading] = useState(false);
 
     const registerUser = async (e) => {
         e.preventDefault();
@@ -33,31 +35,61 @@ const Signup = () => {
             console.log(error);
         } else {
             setError("");
+            setLoading(true);
 
             const userData = {
                 username : username,
                 email : email,
                 password : password
             }
-            await axios.post(`${SERVER_ADDRESS}/signup`,userData).then((res)=>{
-                const statusCode = res.data.code;
+            // await axios.post(`${SERVER_ADDRESS}/signup`,userData).then((res)=>{
+            //     const statusCode = res.data.code;
                 
+            //     if(statusCode === 102) {
+            //         alert('User already exists');
+            //     } else if( statusCode === 101) {
+            //         alert('Please try again');
+            //     } else {
+            //         dispatch(setAuthentication(true));
+            //         localStorage.setItem('isAuth',isAuth);
+            //         localStorage.setItem('userEmail',email);
+            //         if(isAuth) {
+            //             navigate("/main");
+            //         }
+            //     }
+
+            // }).catch((err)=>{
+            //     console.log(err);
+            // })
+
+            try {
+                const res = await axios.post(`${SERVER_ADDRESS}/signup`,userData);
+                const statusCode = res.data.code;
                 if(statusCode === 102) {
                     alert('User already exists');
                 } else if( statusCode === 101) {
                     alert('Please try again');
-                } else {
-                    dispatch(setAuthentication(true));
-                    localStorage.setItem('isAuth',isAuth);
-                    localStorage.setItem('userEmail',email);
-                    if(isAuth) {
-                        navigate("/main");
-                    }
                 }
-
-            }).catch((err)=>{
-                console.log(err);
-            })
+                else{
+                    dispatch(setAuthentication(true));
+                    localStorage.setItem('userEmail', email);
+    
+                    // Dispatching the authentication might not instantly update `isAuth`
+                    // Therefore, use a manual approach to check if auth is set
+                    localStorage.setItem('isAuth', 'true'); // Consider storing strings in localStorage
+                    
+                    // Move navigation inside the .then block after ensuring auth is set
+                    setTimeout(() => {
+                        if (localStorage.getItem('isAuth') === 'true') {
+                            navigate("/main");
+                        }
+                    }, 10); // Short delay to ensure state updates are reflected
+                }
+            } catch (err) {
+                console.log("Error from login page", err);
+                setError("Login failed due to server error");
+            }
+            setLoading(false);
         }
     }
 
@@ -109,7 +141,10 @@ const Signup = () => {
                         />
                     </div>
                     {error ? <div style={{color : "red"}}>{error}</div>:null}
-                    <button className="form_btn" type="submit">Register</button>
+                    <span >
+                        <Link to="/login" className="link">Login for user</Link>
+                    </span>
+                    <button className="form_btn" type="submit" >{loading ? <Spinner size="small" color="white" /> : "Register"}</button>
                 </form>
             </div>
 
