@@ -1,5 +1,5 @@
 .friendList-container{
-    margin : 1% 5%;
+    margin : 2% 5%;
     box-shadow: 0 0 1px black;
     padding: 2% 0;
     font-style: 'Poppins';
@@ -10,11 +10,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 4%;
 }
 
 .no-friend-container span{
     font-size: 0.8rem;
 }
+
+.sub-title.sub-title{
+    font-size: 1.2rem;
+}
+
+
 
 .add-friend-btn{
     width : 50%;
@@ -27,6 +34,7 @@
     font-weight: 700;
     border-radius: 10px;
     margin-top: 2%;
+    margin-bottom: 2%;
 }
 
 .add-friend-btn:hover{
@@ -42,16 +50,22 @@
 
 .friendList-item{
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.527);
     margin: 2% 0;
     padding: 2% 0;
 }
 
+.friendList-name{
+    width : 30%;
+    text-align: left;
+    margin-left: 20px;
+}
+
 .btn-space{
     padding: 2%;
-    margin: 1%;
+    margin: 3%;
     border-radius: 5px;
     font-size: 0.9rem;
 }

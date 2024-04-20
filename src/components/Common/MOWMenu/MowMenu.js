@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 const MowMenu = ({setComponent}) => { 
   const [isOpen, setIsOpen] = useState(false);
   const navItems = [{"name" : "Home" , "component" : 'home'},
-                    {"name" : "Friends" , "component" : 'home'},
+                    {"name" : "Friends" , "component" : 'friends'},
                     {"name" : "Activity" , "component" : 'home'}, 
                     {"name" : "Account" , "component" : 'home'}];
   const [authenticated,setAuth] = useState(false);

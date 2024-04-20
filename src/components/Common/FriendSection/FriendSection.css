@@ -93,3 +93,15 @@
     color: blue;
     cursor: pointer;
 }
+
+@media screen and (max-width : 780px) {
+    .home_friends_section{
+        width : 60%;
+    }
+}
+
+@media screen and (max-width : 420px) {
+    .home_friends_section{
+        width : 80%;
+    }
+}

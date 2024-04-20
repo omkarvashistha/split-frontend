@@ -1,0 +1,44 @@
+.friends-main-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friends-friend-container{
+    width : 50%;
+}
+
+.friends-friend-container h1{
+    font-size: 2rem;
+}
+
+
+@media screen and (max-width : 900px){
+    .friends-friend-container{
+        width : 60%;
+    }
+}
+
+@media screen and (max-width : 590px){
+    .friends-friend-container{
+        width : 80%;
+    }
+}
+
+@media screen and (max-width : 300px){
+    .test-main-info h2{
+        width : 95%;
+        font-size: 0.9rem;
+    }
+
+    .test-main-img{
+        width: 40px;
+        height: 40px;
+    }
+
+    .test-main-img img{
+        width: 30px;
+        height: 30px
+    }
+}

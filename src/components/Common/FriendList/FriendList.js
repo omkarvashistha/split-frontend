@@ -85,6 +85,7 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
         
         <div className="friendList-container">
             <Alert message={alertMessage} visible={showAlert} onClose={() => setShowAlert(false)} />
+            <p className="sub-title" style={{fontWeight : "500"}}>Your Friends</p>
             {friends.length === 0 ? 
                 <div className="no-friend-container">
                     <span>No friend start by adding friend</span>
@@ -108,15 +109,19 @@ const FriendList = ({friends,getFriends,updateMembers,members}) => {
                             onChange={() => handleCheckboxChange(friend.UId)}
                             checked={friend.isSelected}
                             />
-                            <span>{friend.UName}</span>
+                            <div className="friendList-name">
+                                <span className="span-font">{friend.UName}</span>
+                            </div>
+                            
                         </div>
                     ))}
                     <button className="add-friend-btn btn-space" onClick={addToGroup}>Select</button>
 
-                    <div className="no-friend-container" style={{margin : "2% 0"}}>
+                    <div className="no-friend-container">
+                        <span className="sub-title">Add Friend</span>
                         <input 
                             type="text"
-                            placeholder="Friend Name"
+                            placeholder="Friend Name" 
                             className="add-friend-input"
                             value={fName}
                             onChange={(e) => setFname(e.target.value)}

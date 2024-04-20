@@ -3,7 +3,7 @@ import './FriendSection.css';
 import { useSelector } from "react-redux";
 import Spinner from "../Spinner/Spinner";
 
-const FriendSection = ({ friends, handleLogin, loading }) => {
+const FriendSection = ({ friends, handleLogin, loading , classes = ''}) => {
     // State to track whether to show all friends or only the first four
     const [showAll, setShowAll] = useState(false);
 
@@ -27,7 +27,7 @@ const FriendSection = ({ friends, handleLogin, loading }) => {
     const visibleFriends = showAll ? friends : friends.slice(0, 4);
 
     return (
-        <div className="home_friends_section">
+        <div className={`home_friends_section ${classes}`}>
             <h1>Friends</h1>
             {!isAuth ? (
                 notLoginContainer()

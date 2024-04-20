@@ -12,6 +12,7 @@ import ExpenseOverlay from "../Common/Overlay/ExpenseOverlay/ExpenseOverlay";
 import  commonApiCalls from "../Common/commonApiCalls";
 import DotSpinner from "../Common/Spinner/DotSpinner";
 import FriendSection from "../Common/FriendSection/FriendSection";
+import MonthlyExpenses from "../Common/MonthlyExpense/MonthlyExpense";
 
 const Home = () =>{
 
@@ -19,12 +20,16 @@ const Home = () =>{
 
     const [groupsData,setGroupsData] = useState([]);
     const email = localStorage.getItem('userEmail');
+
     const isAuth = useSelector((state) => state.isAuthenticated.isAuth);
     const [authenticated,setAuth] = useState(false);
+
     const [isOpen,setIsOpen] = useState(false);
     const [isOpenExpense,setIsOpenExpense] = useState(false);
+
     const [groupName,setGroupName] = useState("");
     const [errorMsg,setErrorMsg] = useState("");
+
     const HomeChild = lazy(() => import('./HomeChild'));
     const navigate = useNavigate();
 
@@ -271,8 +276,8 @@ const Home = () =>{
 
             <div className="home_graph_section_container">
                 <div className="home_graph_section ">
-                    <h1>Your monthly spending</h1>
-                    <img src="/barGraph.png"/>
+                     <h1>Your monthly spending</h1>
+                    <MonthlyExpenses/>
                 </div>
 
                 <FriendSection

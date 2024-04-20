@@ -20,6 +20,16 @@
   justify-content: center;
   align-items: center;
 }
+
+.sub-title{
+  font-size: 1rem;
+}
+
+.span-font{
+  font-size: 0.9rem;
+  text-align: left;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

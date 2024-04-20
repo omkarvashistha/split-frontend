@@ -315,6 +315,7 @@ const ExpenseOverlay = ({
                             />
                             <input 
                                 className="addGroup_form_input"
+                                type="number"
                                 style={error && amtError ? amtBorder : {marginTop : "5px"}}
                                 placeholder="Amount"
                                 value={totalAmount}

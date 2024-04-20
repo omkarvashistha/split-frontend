@@ -444,14 +444,15 @@
     }
 
     .home_graph_section{
-        width: 82%;
+        width: 92%;
         margin-left: 10px;
-        height : auto;
+        margin-top: 3%;
+        margin-bottom: 3%;
     }
 
-    .home_friends_section{
-        margin-top: 35px;
-        width : 40%;
+
+    .home_friend_section.home_friend_section{
+        width : 60%;
     }
 }
 
