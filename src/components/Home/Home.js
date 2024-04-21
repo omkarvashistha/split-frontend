@@ -275,7 +275,7 @@ const Home = () =>{
             </div>
 
             <div className="home_graph_section_container">
-                <div className="home_graph_section ">
+                <div className="home_graph_section" >
                      <h1>Your monthly spending</h1>
                     <MonthlyExpenses/>
                 </div>

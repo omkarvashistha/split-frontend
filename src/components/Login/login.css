@@ -15,11 +15,15 @@
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.637);
     padding-bottom: 2%;
+    font-family: 'Poppins';
 }
 
 .login_container {
     margin-bottom: 3%;
     width : 70%;
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
 .form_input{
@@ -27,7 +31,8 @@
     width : 100%;
     font-size: 1rem;
     border-radius: 20px;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-family: 'Poppins';
+    padding-right: 10px;
 }
 
 .form_btn{
@@ -47,22 +52,31 @@
     background-color: rgba(0, 0, 0, 0.80);
 }
 
+.toggle-password {
+    border: none;
+    background: none;
+    cursor: pointer;
+    position: absolute;
+    right: 2%;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px; /* Adjust size as needed */
+    color: #555; /* Adjust color as needed */
+}
+
 @media screen and (max-width : 1000px) {
     .login_form{
-        width :  45%;
+        width :  65%;
     }
 }
 
 @media screen and (max-width : 700px) {
     .login_form{
-        width :  60%;
+        width :  80%;
     }
 }
 
 @media screen and (max-width : 475px) {
-    .login_form{
-        width :  70%;
-    }
 
     .login_container{
         width : 80%;
@@ -72,7 +86,12 @@
 
 @media screen and (max-width : 350px) {
     .login_form{
-        width :  85%;
+        width :  95%;
         margin-top: 5%;
+        min-height : 300px;
+    }
+
+    .form_btn{
+        margin-bottom: 10px;
     }
 }
