@@ -504,6 +504,10 @@
     .home_child_transaction_child{
         font-size: 0.8rem;
     }
+
+    .home_friends_section{
+        margin-bottom: 60px;
+    }
 }
 
 @media screen and (max-width : 376px) {
