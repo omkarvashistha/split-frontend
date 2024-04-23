@@ -13,8 +13,9 @@ import  commonApiCalls from "../Common/commonApiCalls";
 import DotSpinner from "../Common/Spinner/DotSpinner";
 import FriendSection from "../Common/FriendSection/FriendSection";
 import MonthlyExpenses from "../Common/MonthlyExpense/MonthlyExpense";
+import AddFriendOverlay from "../Common/Overlay/AddFriendOverlay/AddFriendOverlay";
 
-const Home = () =>{
+const Home = React.memo(() =>{
 
     const HomeContext = createContext();
 
@@ -26,6 +27,7 @@ const Home = () =>{
 
     const [isOpen,setIsOpen] = useState(false);
     const [isOpenExpense,setIsOpenExpense] = useState(false);
+    const [isFriendsOpen,setIsFriendOpen] = useState(false);
 
     const [groupName,setGroupName] = useState("");
     const [errorMsg,setErrorMsg] = useState("");
@@ -122,8 +124,7 @@ const Home = () =>{
                 }
             setLoading(false);
         } catch (error) {
-            console.log(error);
-            alert("Some error caught in getting groups check console");
+            console.log("Some error caught in getting groups check console",error);
         }
     }
 
@@ -170,6 +171,11 @@ const Home = () =>{
         setMemberNames([]);
     }
 
+    const toggleAddFriendsOverlay = (e) => {
+        e.preventDefault();
+        setIsFriendOpen(!isFriendsOpen);
+    }
+
     const fallbackDiv = () => {
         return(
             <div style={{textAlign : "center"}}>
@@ -199,8 +205,8 @@ const Home = () =>{
             <div className="home_header">
                 <h1>Your Groups</h1>
                 {authenticated && 
-                <div className="home_header_buttonGroup">
-                    <div className="button_with_tooltip tooltip" >
+                <div className="home_header_buttonGroup" >
+                    <div className="button_with_tooltip tooltip" onClick={toggleAddFriendsOverlay}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="25px" height="25px" fill="currentColor" class="bi bi-person-fill-add" viewBox="0 0 18 18">
                             <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                             <path d="M2 13c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4"/>
@@ -319,14 +325,18 @@ const Home = () =>{
                 showMemberList = {showMemberList}
                 setShowMemberList={setShowMemberList}
                 listLoading = {listLoading}
-                toggleOverlay={toggleOverlay}
                 friends={friends}
                 getFriends={getFriends}
                 getGroups = {getGroups}
             />
+
+            <AddFriendOverlay 
+                isFriendsOpen={isFriendsOpen}
+                toggleAddFriendsOverlay={toggleAddFriendsOverlay}
+            />
             
         </div>
     )
-}
+});
 
 export default Home;

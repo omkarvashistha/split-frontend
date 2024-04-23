@@ -1,0 +1,18 @@
+.addFriendOverlay-main{
+    margin-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.addFriend_top h1{
+    font-size: 1.5rem;
+}
+
+.no-friend-container{
+    box-shadow: 0 0 2px black;
+    width : 60%;
+    height : 200px;
+    border-radius: 20px;
+}
