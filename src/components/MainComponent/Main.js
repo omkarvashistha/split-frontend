@@ -12,6 +12,7 @@ const Main = () => {
     const isAuth = useSelector((state) => state.isAuthenticated.isAuth);
     const navigate = useNavigate();
     const [authenticated,setAuth] = useState(false);
+    const [showNotification, setShowNotification] = useState(true);
     const renderComponent = () => {
         switch(component) {
             case 'home' :
@@ -31,8 +32,18 @@ const Main = () => {
         if(isAuth) {setAuth(true)};
     },[isAuth])
 
+    const handleCloseNotification = () => {
+        setShowNotification(false);
+    }
+
     return(
         <>
+            {showNotification && (
+                <div className="system-notification">
+                    <p>Soory for the inconvinience servers are free so it might load please be patient</p>
+                    <button onClick={handleCloseNotification}>X</button>
+                </div>
+            )}
             <div id="main" className="">
                 <MowMenu
                     setComponent={setComponent}

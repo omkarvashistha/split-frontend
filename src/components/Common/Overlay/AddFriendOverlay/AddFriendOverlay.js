@@ -63,7 +63,7 @@ const AddFriendOverlay = ({isFriendsOpen,toggleAddFriendsOverlay}) => {
             <div className="addFriendOverlay-main">
                 <div className="no-friend-container">
                     <div className="addFriend_top">
-                        <h1>Add Group</h1>
+                        <h1>Add Friend</h1>
                     </div>
                     <input 
                         type="text"

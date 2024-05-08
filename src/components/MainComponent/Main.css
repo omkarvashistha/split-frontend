@@ -120,11 +120,50 @@
 
 }
 
+.system-notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background-color: #ffcc00;
+    padding: 10px 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-family: 'Poppins';
+    width : 50%;
+}
+
+.system-notification p {
+    margin: 0;
+    color: #333;
+    text-align: center;
+}
+
+.system-notification button {
+    background-color: white;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    margin-right : 1%;
+    border-radius: 60%;
+    text-align: center;
+    box-shadow: 0 0 1px black;
+}
+
+
 /**Responsive styles*/
 
 @media screen and (max-width : 870px) {
     .main-app-logo{
         margin-left: 30px;
+    }
+
+    .system-notification{
+        width : 80%;
     }
 }
 
@@ -182,5 +221,9 @@
     .main-navbar-options li span svg{
         width: 18px;
         height: 18px;
+    }
+
+    .system-notification{
+        width : 90%;
     }
 }
