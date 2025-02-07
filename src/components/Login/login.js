@@ -120,6 +120,7 @@ const Login = () =>{
                         <Link to='/signup' className="link">Not a user register here.?</Link>
                     </span>
                     <button className="form_btn" type="submit" >{loading ? <Spinner size="small" color="white" /> : "Login"}</button>
+                    <p>For Demo Use this Id <br>id : testuser@gmail.com<br>pass : test123</p></form>
                 </form>
             </div>
 
